@@ -21,7 +21,8 @@ public class Main {
             }
 
             Parser p = new Parser(wasm);
-            System.out.println(p.parse());
+            var ret = p.parse();
+            System.out.println(ret);
             System.out.println("[ end ] parse: " + pathStr);
         }
     }
