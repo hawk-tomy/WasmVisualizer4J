@@ -35,6 +35,7 @@ public class IfInstr implements ControlInstr {
         while (parser
             .peek()
             .isOkAnd(b -> (b != 0x0B && b != 0x05))) {
+            parser.next();
             if (Instruction.parse(parser) instanceof Ok(Instruction it)) {
                 in1.add(it);
             } else {
@@ -45,9 +46,11 @@ public class IfInstr implements ControlInstr {
         if (parser
             .peek()
             .isOkAnd(b -> b != 0x05)) {
+            parser.next();
             while (parser
                 .peek()
                 .isOkAnd(b -> b != 0x0B)) {
+                parser.next();
                 if (Instruction.parse(parser) instanceof Ok(Instruction it)) {
                     in1.add(it);
                 } else {

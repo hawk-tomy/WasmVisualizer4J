@@ -16,6 +16,7 @@ public interface Instruction {
             case Err(InvalidIndexException e) -> {return new Err<>(e.into());}
             case Ok(Byte b_) -> b = b_;
         }
+        parser.next();
         if (UnsignedByteOp.isInRange((byte) 0x00, b, (byte) 0x12)) {
             return ControlInstr
                 .parse(parser, b)

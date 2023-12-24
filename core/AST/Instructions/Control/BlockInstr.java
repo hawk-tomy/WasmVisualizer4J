@@ -33,6 +33,7 @@ public class BlockInstr implements ControlInstr {
         while (parser
             .peek()
             .isOkAnd(b -> b != 0x0B)) {
+            parser.next();
             if (Instruction.parse(parser) instanceof Ok(Instruction it)) {
                 its.add(it);
             } else {

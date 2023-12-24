@@ -22,6 +22,7 @@ public enum ValueType {
             case Err(InvalidIndexException e) -> {return new Err<>(e.into());}
             case Ok(Byte id_) -> id = id_;
         }
+        parser.next();
         return switch (id) {
             case 0x7F -> new Ok<>(ValueType.I32);
             case 0x7E -> new Ok<>(ValueType.I64);
