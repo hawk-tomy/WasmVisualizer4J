@@ -153,4 +153,18 @@ public class Parser {
             }
         }
     }
+
+    public Result<Void, ParseException> checkLength(int beforeIndex, int length) {
+        int realLength = this.getIndex() - beforeIndex;
+        int sign = realLength + length;
+        return (
+            sign == 0
+            ? new Ok<>(null)
+            : new Err<>(new ParseException((
+                                               sign < 0
+                                               ? "Content Size is less than expect."
+                                               : "Content Size is greater than expect."
+                                           ) + " (expect=" + length + ", got=" + realLength + ")"))
+        );
+    }
 }
