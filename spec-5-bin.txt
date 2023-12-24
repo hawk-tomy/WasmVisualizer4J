@@ -1,0 +1,621 @@
+5. Binary Format
+5.1. Conventions
+
+WebAssemblyモジュールのバイナリ形式は、それらの抽象構文の密な線形エンコーディングです。
+この形式は、その唯一の端末記号がバイトである属性文法によって定義されています。
+バイト列は、文法によって生成される場合にのみ、モジュールの正確なエンコーディングです。
+この文法の各生成物は、正確に1つの合成属性を持っています。それは、対応するバイト列がエンコードする抽象構文です。
+したがって、属性文法は暗黙的にデコーディング関数（つまり、バイナリ形式のためのパーシング関数）を定義しています。
+いくつかの例外を除いて、バイナリ文法は抽象構文の文法に密接に従っています。
+
+Note
+抽象構文のいくつかのフレーズは、バイナリ形式では複数の可能なエンコーディングがあります。
+たとえば、数値はオプショナルな先頭のゼロがあるかのようにエンコードされる可能性があります。
+デコーダーの実装はすべての可能な代替をサポートする必要があります。エンコーダーの実装は、許可されているエンコーディングから任意のものを選択できます。
+WebAssemblyモジュールをバイナリ形式で含むファイルの推奨拡張子は「.wasm」であり、推奨されるメディアタイプは「application/wasm」です。
+
+[1] 追加のエンコーディング層（例: 圧縮の導入など）は、ここで定義された基本表現の上に定義される可能性があります。ただし、このような層は現行の仕様の範囲外です。
+
+5.1.1. Grammar
+バイナリ形式の文法規則を定義する際には、以下の規約が採用されています。
+これらは抽象構文に使用される規約を反映しています。
+バイナリ構文のシンボルを抽象構文のシンボルと区別するために、前者にはタイプライターフォントが採用されています。
+端末記号は16進数表記で表されたバイトです：0x0F。
+非終端記号はタイプライターフォントで書かれています：valtype、instr。
+
+B_n：Bのn>=0回の繰り返しのシーケンスです。
+B*：Bの繰り返しのシーケンスで、空であることもあります（これはnが関係ない場合に使用されるB_nの略記法です）。
+B?：Bのオプションの出現です（これはn<=1の場合のB_nの略記法です）。
+x:B：非終端記号Bと同じ言語を示しますが、Bのために合成された属性に変数xをバインドします。
+生成物は sym ::= B_1 -> A_1 | ... | B_n -> A_n と書かれています。ここで、各A_iは与えられた場合にsymに対して合成される属性であり、通常はB_iでバインドされた属性変数から来ます。
+
+一部の生成物は括弧内のサイド条件によって拡張され、生成物の適用範囲を制限します。
+これらは生成物を多くの個別のケースに組み合わせ的に展開するための略記法を提供します。
+
+Note
+たとえば、値の型に関するバイナリ文法は以下のように与えられます：
+
+valtype ::= 0x7F -> i32
+          | 0x7E -> i64
+          | 0x7D -> f32
+          | 0x7C -> f64
+
+したがって、バイト0x7Fは型i32をエンコードし、0x7Eは型i64をエンコードし、以降も同様です。他のバイト値は値の型のエンコードとして許可されていません。
+制約に関するバイナリ文法は以下のように定義されています：
+
+limits ::= 0x00  n:u32        -> {min n,max e}
+         | 0x01  n:u32  m:u32 -> {min n,max m}
+
+つまり、制約ペアは、バイト0x00の後にu32値のエンコーディングが続くか、バイト0x01の後に2つのそのようなエンコーディングが続くようにエンコードされます。
+変数nおよびmは、それぞれu32の非終端記号の属性の名前であり、この場合はそれらがデコードされる実際の符号なし整数です。
+完全な生成物の属性は、それらの値を用いて表現された制約の抽象構文です。
+
+5.1.2. Auxiliary Notation
+バイナリエンコーディングに対処する際、以下の表記法も使用されます。
+
+e は空のバイト列を示します。
+|| B || は、生成物 B から派生したバイト列の長さを示します。
+
+5.1.3. Vectors
+ベクターは、そのu32の長さのエンコードに続いて、要素のシーケンスのエンコードで表されます。
+
+vec(B) ::= n:u32 (x:B)^n -> x^n
+
+5.2. Values
+5.2.1. Bytes
+バイトは自分自身にエンコードします。
+
+byte ::= 0x00 ->  0x00
+       |      ...
+       | 0xFF ->  0xFF
+
+5.2.2. Integers
+全ての整数は、LEB128可変長整数エンコーディング(the LEB128 variable-length integer encoding)を使用して、符号なしまたは符号付きのバリアントでエンコードされます。
+
+符号なし整数は、符号なしLEB128形式(unsigned LEB128 format)でエンコードされます。
+追加の制約として、型uNの値をエンコードするためのバイトの総数は ceil(N/7) バイトを超えてはなりません。
+
+uN ::= n:byte           -> n             ( if n < 2^7 && n < 2^N )
+     | n:byte  m:u(N-7) -> 2^7*m+(n-2^7) ( if n >= 2^7 && N > 7 )
+
+符号付き整数は、符号付きLEB128形式(signed LEB128 format)でエンコードされます。これは2の補数表現を使用します。
+追加の制約として、型sNの値をエンコードするためのバイトの総数は ceil(N/7) バイトを超えてはなりません。
+
+sN ::= n:byte           -> n             ( if n < 2^6 && n < 2^(N-1) )
+     | n:byte           -> n - 2^7       ( if (2^6 <= n < 2^7) && (n >= (2^7 - 2^(N-1))) )
+     | n:byte  m:s(N-7) -> 2^7*m+(n-2^7) ( if n >= 2^7 && N > 7 )
+
+未解釈整数は、符号付き整数としてエンコードされます。
+
+iN ::= n:sN -> i (if n == signed_iN(i))
+
+Note
+生成物の非終端バイトにおけるN>7のサイド条件は、エンコーディングの長さを制限します。
+ただし、これらの範囲内で「トレイリングゼロ」は許容されています。
+例えば、0x03と0x83 0x00は、ともにu8として値3の正しく形成されたエンコーディングです。
+同様に、0x7e、0xFE 0x7F、および0xFE 0xFF 0x7Fは、s16として値-2の正しく形成されたエンコーディングです。
+
+終端バイトの値nに対するサイド条件は、これらのバイトの未使用ビットが正の値の場合は0でなければならず、負の値の場合は1であることをさらに強制します。
+例えば、0x83 0x10はu8のエンコーディングとしては不正です。
+同様に、0x83 0x3Eと0xFF 0x7Bはs8のエンコーディングとしても不正です。
+
+5.2.3. Floating-Point
+浮動小数点値は、[IEEE-754-2019]（セクション3.4）で定義されたビットパターンをリトルエンディアンのバイト順で直接エンコードされます。
+
+float: https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Float.html#intBitsToFloat(int)
+double: https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Double.html#longBitsToDouble(long)
+
+fN ::= b* :byte^N/8 -> bytes_fN^-1(b*)
+
+5.2.4. Names
+名前は、[UNICODE]（セクション3.9）UTF-8エンコーディングを含むバイトのベクターとしてエンコードされます。
+
+name ::= b* :vec(byte) -> name (if utf8(name) == b*)
+
+このエンコーディングを表す補助的なutf8関数は、以下のように定義されています:
+
+utf8(c*) = (utf8(c))*
+utf8(c)  = b               ( if c<U+80 :-> c = b )
+utf8(c)  = b_1 b_2         ( if U+80 <= c < U+800                            :-> c = 2^6*(b_1 - 0xC0) + (b_2 - 0x80) )
+utf8(c)  = b_1 b_2 b_3     ( if U+800 <= c < U+D800 || U+E000 <= c < U+10000 :-> c = 2^12*(b_1 - 0xE0) + 2^6*(b_2 - 0x80) + (b_3 - 0x80) )
+utf8(c)  = b_1 b_2 b_3 b_4 ( if U+10000 <= c < U+110000                      :-> c = 2^18*(b_1 - 0xF0) + 2^12*(b_2 - 0x80) + 2^6*(b_3 - 0x80) + (b_4 - 0x80) )
+where b_2, b_3, b_4 < 0xC0
+
+Note
+他の一部のフォーマットとは異なり、名前の文字列は0で終端されていません。
+
+5.3. Types
+5.3.1. Value Types
+値の型は1バイトでエンコードされます。
+
+valtype ::= 0x7F -> i32
+          | 0x7E -> i64
+          | 0x7D -> f32
+          | 0x7C -> f64
+
+Note
+将来のWebAssemblyのバージョンでは、値の型には型インデックスで示される型も含まれる可能性があります。
+したがって、型のバイナリ形式は小さな負のsNの値の符号付きLEB128エンコーディングに対応しており、これにより将来的には（正の）型インデックスと共存できます。
+
+5.3.2. Result Types
+バイナリ形式に現れる唯一の結果型は、ブロックの型です。
+これらは特別な圧縮形式でエンコードされ、空の型を示すバイト0x40または単一の値の型として表されます。
+
+blocktype ::= 0x40      -> []
+            | t:valtype -> [t]
+
+Note
+将来のWebAssemblyのバージョンでは、このスキームが複数の結果やより一般的なブロック型をサポートするために拡張される可能性があります。
+
+5.3.3. Function Types
+関数の型は、バイト0x60の後に対応するパラメータ型および結果型のベクターが続く形でエンコードされます。
+
+functype ::= 0x60 t_1*:vec(valtype) t_2*:vec(valtype) -> [t_1*] -> [t_2*]
+
+5.3.4. Limits
+制約は、最大値が存在するかどうかを示す前置フラグと共にエンコードされます。
+
+limits ::= 0x00 n:u32        -> { min n, max e }
+         | 0x01 n:u32  m:u32 -> { min n, max m }
+
+5.3.5. Memory Types
+メモリの型は、その制約と共にエンコードされます。
+
+memtype ::= lim:limits -> lim
+
+5.3.6. Table Types
+テーブルの型は、その制約と要素の型を示す定数バイトと共にエンコードされます。
+
+tabletype ::= et:elemtype  lim:limits -> lim et
+elemtype  ::= 0x70                    -> funcref
+
+5.3.7. Global Types
+グローバルの型は、その値の型と可変性を示すフラグと共にエンコードされます。
+
+globaltype ::= t:valtype m:mut -> m t
+mut        ::= 0x00            -> const
+             | 0x01            -> var
+
+5.4. Instructions
+命令はオペコードによってエンコードされます。
+各オペコードは1バイトで表され、必要に応じて即時引数が続きます。
+唯一の例外は、構造化された制御命令で、これはネストされた命令のシーケンスを括る複数のオペコードから成り立っています。
+
+Note
+命令をエンコードするためのバイトコード範囲のギャップは、将来の拡張のために予約されています。
+
+5.4.1. Control Instructions
+制御命令には異なるエンコーディングがあります。
+構造化された命令では、ネストされたブロックを形成する命令シーケンスは、明示的なendおよびelseのオペコードで終了します。
+
+instr ::= 0x00                                                      -> unreachable
+        | 0x01                                                      -> nop
+        | 0x02 rt:blocktype (in:instr)* 0x0B                       -> block rt in* end
+        | 0x03 rt:blocktype (in:instr)* 0x0B                       -> loop rt in* end
+        | 0x04 rt:blocktype (in:instr)* 0x0B                       -> if rt in* else e end
+        | 0x04 rt:blocktype (in_1:instr)* 0x05 (in_2:instr)* 0x0B -> if rt in_1* else in_2* end
+        | 0x0C l:labelidx                                           -> br l
+        | 0x0D l:labelidx                                           -> br_if l
+        | 0x0E l*:vec(labelidx)  l_N:labelidx                      -> br_table l* l_N
+        | 0x0F                                                      -> return
+        | 0x10 x:funcidx                                            -> call x
+        | 0x11 x:typeidx  0x00                                      -> call_indirect x
+
+Note
+if命令のエンコーディングにおいて、elseのオペコード0x05は、続く命令シーケンスが空である場合に省略することができます。
+
+Note
+将来のWebAssemblyのバージョンでは、call_indirect命令のエンコーディングにおいて発生するゼロバイトは、追加のテーブルにインデックスを付けるために使用されるかもしれません。
+
+5.4.2. Parametric Instructions
+パラメトリック命令は、単一バイトのコードで表されます。
+
+instr ::= ...
+        | 0x1A -> drop
+        | 0x1B -> select
+
+5.4.3. Variable Instructions
+変数の命令は、対応するインデックスのエンコーディングが続くバイトコードで表されます。
+
+instr ::= ...
+        | 0x20  x:localidx -> local.get x
+        | 0x21  x:localidx -> local.set x
+        | 0x22  x:localidx -> local.tee x
+        | 0x23  x:globalidx -> global.get x
+        | 0x24  x:globalidx -> global.set x
+
+5.4.4. Memory Instructions
+メモリ命令の各バリアントは異なるバイトコードでエンコードされます。
+ロードとストアは、それぞれのmemarg即時引数のエンコーディングが続きます。
+
+memarg ::= a:u32 o:u32   -> {align a, offset o}
+instr  ::= ...
+         | 0x28 m:memarg -> i32.load m
+         | 0x29 m:memarg -> i64.load m
+         | 0x2A m:memarg -> f32.load m
+         | 0x2B m:memarg -> f64.load m
+         | 0x2C m:memarg -> i32.load8_s m
+         | 0x2D m:memarg -> i32.load8_u m
+         | 0x2E m:memarg -> i32.load16_s m
+         | 0x2F m:memarg -> i32.load16_u m
+         | 0x30 m:memarg -> i64.load8_s m
+         | 0x31 m:memarg -> i64.load8_u m
+         | 0x32 m:memarg -> i64.load16_s m
+         | 0x33 m:memarg -> i64.load16_u m
+         | 0x34 m:memarg -> i64.load32_s m
+         | 0x35 m:memarg -> i64.load32_u m
+         | 0x36 m:memarg -> i32.store m
+         | 0x37 m:memarg -> i64.store m
+         | 0x38 m:memarg -> f32.store m
+         | 0x39 m:memarg -> f64.store m
+         | 0x3A m:memarg -> i32.store8 m
+         | 0x3B m:memarg -> i32.store16 m
+         | 0x3C m:memarg -> i64.store8 m
+         | 0x3D m:memarg -> i64.store16 m
+         | 0x3E m:memarg -> i64.store32 m
+         | 0x3F 0x00     -> memory.size
+         | 0x40 0x00     -> memory.grow
+
+Note
+将来のWebAssemblyのバージョンでは、memory.sizeおよびmemory.grow命令のエンコーディングに現れる追加のゼロバイトが、追加のメモリにインデックスを付けるために使用される可能性があります。
+
+5.4.5. Numeric Instructions
+数値の命令のすべてのバリアントは、異なるバイトコードで表されます。
+const命令の後には、対応するリテラルが続きます。
+
+instr ::= ...
+        | 0x41 n:i32 -> i32.const n
+        | 0x42 n:i64 -> i64.const n
+        | 0x43 z:f32 -> f32.const z
+        | 0x44 z:f64 -> f64.const z
+
+その他のすべての数値の命令は、即時引数なしの単なるオペコードです。
+
+instr ::= ...
+        | 0x45 -> i32.eqz
+        | 0x46 -> i32.eq
+        | 0x47 -> i32.ne
+        | 0x48 -> i32.lt_s
+        | 0x49 -> i32.lt_u
+        | 0x4A -> i32.gt_s
+        | 0x4B -> i32.gt_u
+        | 0x4C -> i32.le_s
+        | 0x4D -> i32.le_u
+        | 0x4E -> i32.ge_s
+        | 0x4F -> i32.ge_u
+
+instr ::= ...
+        | 0x50 -> i64.eqz
+        | 0x51 -> i64.eq
+        | 0x52 -> i64.ne
+        | 0x53 -> i64.lt_s
+        | 0x54 -> i64.lt_u
+        | 0x55 -> i64.gt_s
+        | 0x56 -> i64.gt_u
+        | 0x57 -> i64.le_s
+        | 0x58 -> i64.le_u
+        | 0x59 -> i64.ge_s
+        | 0x5A -> i64.ge_u
+
+instr ::= ...
+        | 0x5B -> f32.eq
+        | 0x5C -> f32.ne
+        | 0x5D -> f32.lt
+        | 0x5E -> f32.gt
+        | 0x5F -> f32.le
+        | 0x60 -> f32.ge
+
+instr ::= ...
+        | 0x61 -> f64.eq
+        | 0x62 -> f64.ne
+        | 0x63 -> f64.lt
+        | 0x64 -> f64.gt
+        | 0x65 -> f64.le
+        | 0x66 -> f64.ge
+
+instr ::= ...
+        | 0x67 -> i32.clz
+        | 0x68 -> i32.ctz
+        | 0x69 -> i32.popcnt
+        | 0x6A -> i32.add
+        | 0x6B -> i32.sub
+        | 0x6C -> i32.mul
+        | 0x6D -> i32.div_s
+        | 0x6E -> i32.div_u
+        | 0x6F -> i32.rem_s
+        | 0x70 -> i32.rem_u
+        | 0x71 -> i32.and
+        | 0x72 -> i32.or
+        | 0x73 -> i32.xor
+        | 0x74 -> i32.shl
+        | 0x75 -> i32.shr_s
+        | 0x76 -> i32.shr_u
+        | 0x77 -> i32.rotl
+        | 0x78 -> i32.rotr
+
+instr ::= ...
+        | 0x79 -> i64.clz
+        | 0x7A -> i64.ctz
+        | 0x7B -> i64.popcnt
+        | 0x7C -> i64.add
+        | 0x7D -> i64.sub
+        | 0x7E -> i64.mul
+        | 0x7F -> i64.div_s
+        | 0x80 -> i64.div_u
+        | 0x81 -> i64.rem_s
+        | 0x82 -> i64.rem_u
+        | 0x83 -> i64.and
+        | 0x84 -> i64.or
+        | 0x85 -> i64.xor
+        | 0x86 -> i64.shl
+        | 0x87 -> i64.shr_s
+        | 0x88 -> i64.shr_u
+        | 0x89 -> i64.rotl
+        | 0x8A -> i64.rotr
+
+instr ::= ...
+        | 0x8B -> f32.abs
+        | 0x8C -> f32.neg
+        | 0x8D -> f32.ceil
+        | 0x8E -> f32.floor
+        | 0x8F -> f32.trunc
+        | 0x90 -> f32.nearest
+        | 0x91 -> f32.sqrt
+        | 0x92 -> f32.add
+        | 0x93 -> f32.sub
+        | 0x94 -> f32.mul
+        | 0x95 -> f32.div
+        | 0x96 -> f32.min
+        | 0x97 -> f32.max
+        | 0x98 -> f32.copysign
+
+instr ::= ...
+        | 0x99 -> f64.abs
+        | 0x9A -> f64.neg
+        | 0x9B -> f64.ceil
+        | 0x9C -> f64.floor
+        | 0x9D -> f64.trunc
+        | 0x9E -> f64.nearest
+        | 0x9F -> f64.sqrt
+        | 0xA0 -> f64.add
+        | 0xA1 -> f64.sub
+        | 0xA2 -> f64.mul
+        | 0xA3 -> f64.div
+        | 0xA4 -> f64.min
+        | 0xA5 -> f64.max
+        | 0xA6 -> f64.copysign
+
+instr ::= ...
+        | 0xA7 -> i32.wrap_i64
+        | 0xA8 -> i32.trunc_f32_s
+        | 0xA9 -> i32.trunc_f32_u
+        | 0xAA -> i32.trunc_f64_s
+        | 0xAB -> i32.trunc_f64_u
+        | 0xAC -> i64.extend_i32_s
+        | 0xAD -> i64.extend_i32_u
+        | 0xAE -> i64.trunc_f32_s
+        | 0xAF -> i64.trunc_f32_u
+        | 0xB0 -> i64.trunc_f64_s
+        | 0xB1 -> i64.trunc_f64_u
+        | 0xB2 -> f32.convert_i32_s
+        | 0xB3 -> f32.convert_i32_u
+        | 0xB4 -> f32.convert_i64_s
+        | 0xB5 -> f32.convert_i64_u
+        | 0xB6 -> f32.demote_f64
+        | 0xB7 -> f64.convert_i32_s
+        | 0xB8 -> f64.convert_i32_u
+        | 0xB9 -> f64.convert_i64_s
+        | 0xBA -> f64.convert_i64_u
+        | 0xBB -> f64.promote_f32
+        | 0xBC -> i32.reinterpret_f32
+        | 0xBD -> i64.reinterpret_f64
+        | 0xBE -> f32.reinterpret_i32
+        | 0xBF -> f64.reinterpret_i64
+
+5.4.6. Expressions
+式は、明示的なendのオペコード（0x0B）で終了する命令シーケンスによってエンコードされます。
+
+expr ::= (in:instr)* 0x0B -> in* end
+
+5.5. Modules
+モジュールのバイナリエンコーディングは、セクションに整理されています。
+ほとんどのセクションは、モジュールレコードの1つのコンポーネントに対応していますが、関数の定義は2つのセクションに分かれています。
+関数の宣言は関数セクションにあり、本体はコードセクションにあります。
+
+Note
+この分離により、モジュール内の関数の並列およびストリーミングコンパイルが可能になります。
+
+5.5.1. Indices
+すべてのインデックスは、それぞれの値でエンコードされます。
+
+typeidx   ::= x:u32 -> x
+funcidx   ::= x:u32 -> x
+tableidx  ::= x:u32 -> x
+memidx    ::= x:u32 -> x
+globalidx ::= x:u32 -> x
+localidx  ::= x:u32 -> x
+labelidx  ::= l:u32 -> l
+
+5.5.2. Sections
+各セクションは以下で構成されています。
+- 1バイトのセクションID
+- コンテンツのバイト数を示すu32のサイズ
+- セクションIDに依存する実際のコンテンツ、その構造はセクションIDによって異なります。
+
+すべてのセクションはオプションであり、省略されたセクションは、そのセクションが空のコンテンツを持つことと同等です。
+次のパラメータ化された文法規則は、ID Nおよび文法Bで記述されたコンテンツを持つセクションの一般的な構造を定義しています。
+
+section_N(B) ::= N:byte size:u32 cont:B -> cont (if size==||B||)
+               | e -> e
+
+ほとんどのセクションでは、コンテンツBはベクターをエンコードします。これらの場合、空の結果eは空のベクターとして解釈されます。
+
+Note
+未知のカスタムセクション以外の場合、デコードにはサイズは必要ありませんが、バイナリをナビゲートする際にセクションをスキップするのに使用できます。
+サイズがバイナリのコンテンツBの長さと一致しない場合、モジュールは不正な形式です。
+
+以下のセクションIDが使用されます:
+
+| ID |          Section |
+|---:|-----------------:|
+|  0 |   custom section |
+|  1 |     type section |
+|  2 |   import section |
+|  3 | function section |
+|  4 |    table section |
+|  5 |   memory section |
+|  6 |   global section |
+|  7 |   export section |
+|  8 |    start section |
+|  9 |  element section |
+| 10 |     code section |
+| 11 |     data section |
+
+5.5.3. Custom Section
+カスタムセクションのIDは0です。
+これらはデバッグ情報やサードパーティの拡張のために使用され、WebAssemblyのセマンティクスでは無視されます。
+それらの内容は、カスタム使用のために解釈されないバイトのシーケンスに続く、カスタムセクションをさらに識別する名前で構成されています。
+
+customsec ::= section_0(custom)
+custom    ::= name byte*
+
+Note
+実装がカスタムセクションの内容を解釈する場合、その内容やセクションの配置に誤りがあっても、モジュールが無効にしてはなりません。
+
+5.5.4. Type Section
+型セクションのIDは1です。これは、モジュールのtypesコンポーネントを表す関数型のベクタにデコードされます。
+
+typesec ::= ft*:section_1(vec(functype)) -> ft*
+
+5.5.5. Import Section
+インポートセクションのIDは2です。これは、モジュールのimportsコンポーネントを表すインポートのベクタにデコードされます。
+
+importsec  ::= im*:section_2(vec(import))   -> im*
+import     ::= mod:name nm:name d:importdesc -> {module mod,name nm,desc d}
+importdesc ::= 0x00  x: typeidx               -> func x
+             | 0x01  tt:tabletype            -> table tt
+             | 0x02  mt:memtype              -> mem mt
+             | 0x03  gt:globaltype           -> global gt
+
+5.5.6. Function Section
+関数セクションのIDは3です。
+これは、モジュールのfuncsコンポーネントの関数のtypeフィールドを表すタイプインデックスのベクタにデコードされます。
+対応する関数のlocalsおよびbodyフィールドは、コードセクションで別々にエンコードされます。
+
+funcsec ::= x*:section_3(vec(typeidx)) -> x*
+
+5.5.7. Table Section
+テーブルセクションのIDは4です。これは、モジュールのtablesコンポーネントを表すテーブルのベクタにデコードされます。
+
+tablesec ::= tab*:section_4(vec(table)) -> tab*
+table    ::= tt:tabletype                -> {type tt}
+
+5.5.8. Memory Section
+メモリセクションのIDは5です。これは、モジュールのmemsコンポーネントを表すメモリのベクタにデコードされます。
+
+memsec ::= mem* :section_5(vec(mem)) -> mem*
+mem    ::= mt:memtype                 -> {type mt}
+
+5.5.9. Global Section
+グローバルセクションのIDは6です。これは、モジュールのglobalsコンポーネントを表すグローバルのベクタにデコードされます。
+
+globalsec ::= glob*:section_6(vec(global)) -> glob*
+global    ::= gt:globaltype  e:expr         -> {type gt,init e}
+
+5.5.10. Export Section
+エクスポートセクションのIDは7です。これは、モジュールのexportsコンポーネントを表すエクスポートのベクタにデコードされます。
+
+exportsec  ::= ex*:section_7(vec(export)) -> ex*
+export     ::= nm:name  d:exportdesc       -> {name nm,desc d}
+exportdesc ::= 0x00 x:funcidx              -> func x
+             | 0x01 x:tableidx             -> table x
+             | 0x02 x:memidx               -> mem x
+             | 0x03 x:globalidx            -> global x
+
+5.5.11. Start Section
+スタートセクションのIDは8です。これは、モジュールのstartコンポーネントを表すオプションのスタート関数にデコードされます。
+
+startsec ::= st?:section_8(start) -> st?
+start    ::= x:funcidx            -> {func x}
+
+5.5.12. Element Section
+エレメントセクションのIDは9です。これは、モジュールのelemコンポーネントを表すエレメントセグメントのベクタにデコードされます。
+
+elemsec ::= seg*:section_9(vec(elem))           -> seg
+elem    ::= x:tableidx  e:expr  y*:vec(funcidx) -> {table x,offset e,init y*}
+
+5.5.13. Code Section
+コードセクションのIDは10です。
+これは、値の型ベクターと式のペアであるコードエントリのベクタにデコードされます。
+これらは、モジュールのfuncsコンポーネントの関数のlocalsおよびbodyフィールドを表します。
+対応する関数のtypeフィールドは、関数セクションで別々にエンコードされます。
+
+各コードエントリのエンコーディングは、次の要素で構成されます。
+
+- バイト単位の関数コードのサイズを示すu32
+- 実際の関数コード。これは、次に挙げる要素から構成されます。
+  - ローカルの宣言
+  - 式としての関数本体
+
+ローカルの宣言は、型と個数によって、同じ型を持つローカル変数がcount個あることを示します。
+- u32のcount
+- 値の型
+
+codesec ::= code*:section_10(vec(code)) -> code*
+code    ::= size:u32  code:func          -> code                ( if size == ||func|| )
+func    ::= (t*)*:vec(locals)  e:expr  -> concat((t*)*),e* ( if |concat((t*)*)| < 2^32 )
+locals  ::= n:u32 t:valtype              -> t^n
+
+ここでは、コードは対の (valtype^:*, expr) を対象とします。メタ関数 concat((t*)*) は、すべてのシーケンス t_i* を (t*)* に連結します。
+結果のシーケンスの長さがベクターの最大サイズの範囲外の場合、そのコードは不正な形式です。
+
+Note
+セクションと同様に、コードのサイズはデコードには必要ありませんが、バイナリをナビゲートする際に関数をスキップするのに使用できます。
+サイズが対応する関数コードの長さと一致しない場合、モジュールは不正な形式です。
+
+5.5.14. Data Section
+データセクションのIDは11です。これは、モジュールのdataコンポーネントを表すデータセグメントのベクタにデコードされます。
+
+datasec ::= seg*:section_11(vec(data))   -> seg
+data    ::= x:memidx e:expr b*:vec(byte) -> {data x,offset e,init b*}
+
+5.5.15. Modules
+モジュールのエンコーディングは、4バイトのマジックナンバー（'\0asm'という文字列）とバージョンフィールドを含む前文で始まります。現在のWebAssemblyバイナリ形式のバージョンは1です。
+前文の後にはセクションのシーケンスが続きます。カスタムセクションはこのシーケンスの任意の位置に挿入できますが、他のセクションは最大で1回だけで、指定された順序で発生する必要があります。すべてのセクションは空にすることができます。
+（おそらく空の）関数セクションおよびコードセクションで生成されるベクターの長さは一致する必要があります。
+
+magic   ::= 0x00 0x61 0x73 0x6D
+version ::= 0x01 0x00 0x00 0x00
+module  ::= magic version     customsec*
+            functype*:typesec customsec*
+            import*:importsec customsec*
+            typeidx^n:funcsec customsec*
+            table*:tablesec   customsec*
+            mem*:memsec       customsec*
+            global*:globalsec customsec*
+            export*:exportsec customsec*
+            start?:startsec   customsec*
+            elem*:elemsec     customsec*
+            code^n:codesec    customsec*
+            data*:datasec     customsec*
+        -> {
+            types functype*,
+            funcs func^n,
+            tables table*,
+            mems mem*,
+            globals global*,
+            elem elem*,
+            data data*,
+            start start?,
+            imports import*,
+            exports export*
+        }
+
+
+where for each t_i*,e_i in code^n,
+func^n[i] = {type typeidx^n[i], locals t_i*, body e_i}
+
+Note
+WebAssemblyバイナリフォーマットのバージョンは、将来的にはフォーマットに互換性のない変更が必要な場合に増加するかもしれません。
+ただし、そのような変更は非常にまれにしか発生しないと予想されます。
+バイナリフォーマットは将来の拡張に対して前方互換性があるように設計されており、そのバージョンを増やすことなく拡張できるようになっています。
