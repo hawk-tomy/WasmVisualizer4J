@@ -143,4 +143,14 @@ public class Parser {
             return new Err<>(new ParseException("utf-8 decode Error:\n" + e));
         }
     }
+
+    public <T> ArrayList<T> parseSequence(Function<Parser, Result<T, ParseException>> parse) {
+        ArrayList<T> rets = new ArrayList<>();
+        while (true) {
+            switch (parse.apply(this)) {
+                case Err(ParseException ignored) -> {return rets;}
+                case Ok(T ret) -> rets.add(ret);
+            }
+        }
+    }
 }
