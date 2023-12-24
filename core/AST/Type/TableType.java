@@ -22,4 +22,8 @@ public class TableType {
             case Ok(Limit limit) -> new Ok<>(new TableType(limit));
         };
     }
+
+    public String toString() {
+        return "TableType(limit=" + this.limit + ")";
+    }
 }

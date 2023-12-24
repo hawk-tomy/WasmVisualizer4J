@@ -14,4 +14,8 @@ public class NopInstr implements ControlInstr {
             return new Ok<>(new NopInstr());
         }
     }
+
+    public String toString() {
+        return "NopInstr";
+    }
 }

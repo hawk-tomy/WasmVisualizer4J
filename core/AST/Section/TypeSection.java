@@ -19,4 +19,15 @@ public final class TypeSection implements BaseSection {
             .nextVector(FunctionType::parse)
             .map(TypeSection::new);
     }
+
+    public String toString() {
+        return (
+            "TypeSection(\n"
+            + (
+                "types="
+                + this.types
+            ).indent(2)
+            + "\n)"
+        );
+    }
 }

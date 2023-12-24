@@ -4,6 +4,7 @@ import core.AST.Component.ElementsComponent;
 import core.Parser;
 import core.util.ParseException;
 import core.util.Result.Result;
+import core.util.ToStringUtil;
 
 import java.util.ArrayList;
 
@@ -18,5 +19,16 @@ public final class ElementSection implements BaseSection {
         return parser
             .nextVector(ElementsComponent::parse)
             .map(ElementSection::new);
+    }
+
+    public String toString() {
+        return (
+            "ElementSection(\n"
+            + (
+                "elements="
+                + ToStringUtil.arrayList(this.elements)
+            ).indent(2)
+            + "\n)"
+        );
     }
 }

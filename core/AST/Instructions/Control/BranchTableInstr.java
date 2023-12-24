@@ -5,6 +5,7 @@ import core.util.ParseException;
 import core.util.Result.Err;
 import core.util.Result.Ok;
 import core.util.Result.Result;
+import core.util.ToStringUtil;
 
 import java.util.ArrayList;
 
@@ -30,5 +31,16 @@ public class BranchTableInstr implements ControlInstr {
             case Err(ParseException e) -> new Err<>(e);
             case Ok(Integer idx) -> new Ok<>(new BranchTableInstr(labelIdxes, idx));
         };
+    }
+
+    public String toString() {
+        return (
+            "BranchTableInstr("
+            + (
+                "uLabelIdxes=" + ToStringUtil.arrayList(this.uLabelIdxes)
+                + "\ndefaultLabelIdx=" + this.defaultLabelIdx
+            ).indent(2)
+            + "\n)"
+        );
     }
 }

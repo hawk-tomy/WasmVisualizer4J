@@ -38,4 +38,8 @@ public class MemoryInstr implements Instruction {
         }
         return new Err<>(new ParseException("Unknown Instruction."));
     }
+
+    public String toString() {
+        return String.format("MemoryInstr(instr=%X, align=%d, offset=%d)", this.instr, this.align, this.offset);
+    }
 }

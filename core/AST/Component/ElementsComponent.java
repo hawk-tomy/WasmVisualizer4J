@@ -6,6 +6,7 @@ import core.util.ParseException;
 import core.util.Result.Err;
 import core.util.Result.Ok;
 import core.util.Result.Result;
+import core.util.ToStringUtil;
 
 import java.util.ArrayList;
 
@@ -34,5 +35,17 @@ public class ElementsComponent {
         return parser
             .nextVector(Parser::nextU32)
             .map(idxes -> new ElementsComponent(tableIdx, expr, idxes));
+    }
+
+    public String toString() {
+        return (
+            "ElementsComponent(\n"
+            + (
+                "tableIdx=" + this.tableIdx
+                + "\nexpr=" + this.expr
+                + "\nfuncIdx=" + ToStringUtil.arrayList(this.funcIdx)
+            ).indent(2)
+            + "\n)"
+        );
     }
 }

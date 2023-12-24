@@ -4,6 +4,7 @@ import core.AST.Component.GlobalsComponent;
 import core.Parser;
 import core.util.ParseException;
 import core.util.Result.Result;
+import core.util.ToStringUtil;
 
 import java.util.ArrayList;
 
@@ -18,5 +19,16 @@ public final class GlobalSection implements BaseSection {
         return parser
             .nextVector(GlobalsComponent::parse)
             .map(GlobalSection::new);
+    }
+
+    public String toString() {
+        return (
+            "GlobalSection(\n"
+            + (
+                "global="
+                + ToStringUtil.arrayList(this.global)
+            ).indent(2)
+            + "\n)"
+        );
     }
 }

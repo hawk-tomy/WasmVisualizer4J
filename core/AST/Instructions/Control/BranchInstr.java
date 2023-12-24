@@ -22,4 +22,8 @@ public class BranchInstr implements ControlInstr {
             case Ok(Integer idx) -> new Ok<>(new BranchInstr(idx));
         };
     }
+
+    public String toString() {
+        return "BranchInstr(uLabelIdx=" + this.uLabelIdx + ')';
+    }
 }

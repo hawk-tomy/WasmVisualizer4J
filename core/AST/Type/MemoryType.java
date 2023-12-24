@@ -19,4 +19,8 @@ public class MemoryType {
             case Ok(Limit limit) -> new Ok<>(new MemoryType(limit));
         };
     }
+
+    public String toString() {
+        return "MemoryType(limit=" + this.limit + ")";
+    }
 }

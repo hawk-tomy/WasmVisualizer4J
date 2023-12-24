@@ -21,4 +21,8 @@ public class NumericInstr implements Instruction {
         }
         return new Err<>(new ParseException("Unknown Instruction."));
     }
+
+    public String toString() {
+        return String.format("NumericInstr(instr=%X)", this.instr);
+    }
 }

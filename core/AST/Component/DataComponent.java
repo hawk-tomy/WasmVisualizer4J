@@ -9,6 +9,8 @@ import core.util.Result.Ok;
 import core.util.Result.Result;
 
 import java.util.ArrayList;
+import java.util.HexFormat;
+import java.util.stream.Collectors;
 
 public class DataComponent {
     int memIdx;
@@ -40,5 +42,23 @@ public class DataComponent {
             case Ok(ArrayList<Byte> bytes_) -> bytes = bytes_;
         }
         return new Ok<>(new DataComponent(memIdx, expr, bytes));
+    }
+
+    public String toString() {
+        HexFormat f = HexFormat.of();
+        String s = this.bytes
+            .subList(0, 10)
+            .stream()
+            .map(f::toHexDigits)
+            .collect(Collectors.joining());
+        return (
+            "DataComponent("
+            + (
+                "memIdx=" + this.memIdx
+                + "\nexpr=" + this.expr
+                + "\nbytes=" + s + "..."
+            )
+            + "\n)"
+        );
     }
 }

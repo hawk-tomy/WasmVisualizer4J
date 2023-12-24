@@ -19,4 +19,15 @@ public final class DataSection implements BaseSection {
             .nextVector(DataComponent::parse)
             .map(DataSection::new);
     }
+
+    public String toString() {
+        return (
+            "DataSection(\n"
+            + (
+                "data="
+                + this.data
+            ).indent(2)
+            + "\n)"
+        );
+    }
 }

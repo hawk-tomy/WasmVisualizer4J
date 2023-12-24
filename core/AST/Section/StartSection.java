@@ -16,4 +16,8 @@ public final class StartSection implements BaseSection {
             .nextU32()
             .map(StartSection::new);
     }
+
+    public String toString() {
+        return "StartSection(uIdx=" + this.uIdx + ')';
+    }
 }

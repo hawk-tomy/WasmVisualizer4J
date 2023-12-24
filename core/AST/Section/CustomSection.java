@@ -8,6 +8,8 @@ import core.util.Result.Ok;
 import core.util.Result.Result;
 
 import java.util.ArrayList;
+import java.util.HexFormat;
+import java.util.stream.Collectors;
 
 public final class CustomSection implements BaseSection {
     String name;
@@ -36,5 +38,23 @@ public final class CustomSection implements BaseSection {
             }
         }
         return new Ok<>(new CustomSection(name, custom));
+    }
+
+    public String toString() {
+        HexFormat f = HexFormat.of();
+        String s = this.custom
+            .subList(0, 10)
+            .stream()
+            .map(f::toHexDigits)
+            .collect(Collectors.joining());
+        return (
+            "CustomSection(\n"
+            + (
+                "name='" + this.name + "'\n"
+                + "custom=" + s + "..."
+            ).indent(2)
+            + "\n)"
+        );
+
     }
 }

@@ -26,4 +26,8 @@ public class CallIndirectInstr implements ControlInstr {
             .nextByte((byte) 0x00)
             .map(ignored -> new CallIndirectInstr(typeIdx));
     }
+
+    public String toString() {
+        return "CallIndirectInstr(typeIdx=" + this.typeIdx + ')';
+    }
 }

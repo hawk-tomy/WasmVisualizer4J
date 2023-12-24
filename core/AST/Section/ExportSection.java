@@ -19,4 +19,15 @@ public final class ExportSection implements BaseSection {
             .nextVector(ExportsComponent::parse)
             .map(ExportSection::new);
     }
+
+    public String toString() {
+        return (
+            "ExportSection(\n"
+            + (
+                "exports="
+                + this.exports
+            ).indent(2)
+            + "\n)"
+        );
+    }
 }

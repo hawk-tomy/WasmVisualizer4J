@@ -5,6 +5,7 @@ import core.util.ParseException;
 import core.util.Result.Err;
 import core.util.Result.Ok;
 import core.util.Result.Result;
+import core.util.ToStringUtil;
 
 import java.util.ArrayList;
 
@@ -32,5 +33,18 @@ public class FunctionType {
             case Ok(ArrayList<ValueType> rsts) -> results = rsts;
         }
         return new Ok<>(new FunctionType(parameters, results));
+    }
+
+    public String toString() {
+        return (
+            "FunctionType(\n"
+            + (
+                "parameters="
+                + ToStringUtil.arrayList(this.parameters)
+                + "\nresults="
+                + ToStringUtil.arrayList(this.results)
+            ).indent(2)
+            + "\n)"
+        );
     }
 }

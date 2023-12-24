@@ -40,4 +40,8 @@ public class Limit {
         }
         return new Ok<>(new Limit(uMin, uMax));
     }
+
+    public String toString() {
+        return "Limit(uMin=" + this.uMin + ", uMax=" + this.uMax + ')';
+    }
 }

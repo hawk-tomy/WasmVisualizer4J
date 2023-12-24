@@ -22,4 +22,8 @@ public final class ImportFunctionComponent implements ImportComponentBase {
             case Ok(Integer i) -> new Ok<>(new ImportFunctionComponent(mod, name, i));
         };
     }
+
+    public String toString() {
+        return String.format("ImportFunctionComponent(mod='%s', name='%s', idx=%d)", this.mod, this.name, this.uIdx);
+    }
 }

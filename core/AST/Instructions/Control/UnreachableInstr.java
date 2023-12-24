@@ -14,4 +14,8 @@ public class UnreachableInstr implements ControlInstr {
             return new Ok<>(new UnreachableInstr());
         }
     }
+
+    public String toString() {
+        return "UnreachableInstr";
+    }
 }

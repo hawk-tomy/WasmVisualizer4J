@@ -6,6 +6,7 @@ import core.util.ParseException;
 import core.util.Result.Err;
 import core.util.Result.Ok;
 import core.util.Result.Result;
+import core.util.ToStringUtil;
 
 import java.util.ArrayList;
 
@@ -21,5 +22,16 @@ public final class ImportSection implements BaseSection {
             case Err(ParseException e) -> new Err<>(e);
             case Ok(ArrayList<ImportComponentBase> imports) -> new Ok<>(new ImportSection(imports));
         };
+    }
+
+    public String toString() {
+        return (
+            "ImportSection(\n"
+            + (
+                "imports="
+                + ToStringUtil.arrayList(this.imports)
+            ).indent(2)
+            + "\n)"
+        );
     }
 }

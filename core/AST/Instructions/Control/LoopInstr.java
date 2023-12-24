@@ -7,6 +7,7 @@ import core.util.ParseException;
 import core.util.Result.Err;
 import core.util.Result.Ok;
 import core.util.Result.Result;
+import core.util.ToStringUtil;
 
 import java.util.ArrayList;
 
@@ -42,5 +43,16 @@ public class LoopInstr implements ControlInstr {
             return new Err<>(e);
         }
         return new Ok<>(new LoopInstr(rt, its));
+    }
+
+    public String toString() {
+        return (
+            "LoopInstr(\n"
+            + (
+                "rt=" + this.rt
+                + "\nits=" + ToStringUtil.arrayList(this.its)
+            ).indent(2)
+            + "\n)"
+        );
     }
 }

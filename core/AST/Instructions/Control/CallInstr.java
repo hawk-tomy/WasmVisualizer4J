@@ -20,4 +20,8 @@ public class CallInstr implements ControlInstr {
             .nextU32()
             .map(CallInstr::new);
     }
+
+    public String toString() {
+        return "CallInstr(funcIdx=" + this.funcIdx + ')';
+    }
 }

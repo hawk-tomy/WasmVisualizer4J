@@ -19,4 +19,8 @@ public final class MemorySection implements BaseSection {
             .nextVector(MemoryType::parse)
             .map(MemorySection::new);
     }
+
+    public String toString() {
+        return "MemorySection(mts=" + this.mts + ')';
+    }
 }

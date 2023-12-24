@@ -21,6 +21,7 @@ import core.util.ParseException;
 import core.util.Result.Err;
 import core.util.Result.Ok;
 import core.util.Result.Result;
+import core.util.ToStringUtil;
 
 import java.util.ArrayList;
 import java.util.function.BiFunction;
@@ -186,5 +187,26 @@ public final class Module {
             };
             case None() -> new None<>();
         };
+    }
+
+    public String toString() {
+        return (
+            "Module(\n"
+            + (
+                "customSections=" + ToStringUtil.arrayList(this.customSections)
+                + "\ntypes=" + ToStringUtil.arrayList(this.types)
+                + "\nimports=" + ToStringUtil.arrayList(this.imports)
+                + "\nfunctions=" + ToStringUtil.arrayList(this.functions)
+                + "\ntables=" + ToStringUtil.arrayList(this.tables)
+                + "\nmemories=" + ToStringUtil.arrayList(this.memories)
+                + "\nglobals=" + ToStringUtil.arrayList(this.globals)
+                + "\nexports=" + ToStringUtil.arrayList(this.exports)
+                + "\nstarts=" + this.starts
+                + "\nelements=" + ToStringUtil.arrayList(this.elements)
+                + "\ncodes=" + ToStringUtil.arrayList(this.codes)
+                + "\ndata=" + ToStringUtil.arrayList(this.data)
+            ).indent(2)
+            + "\n)"
+        );
     }
 }

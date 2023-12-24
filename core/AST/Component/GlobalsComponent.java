@@ -30,4 +30,15 @@ public class GlobalsComponent {
         }
         return new Ok<>(new GlobalsComponent(gt, expr));
     }
+
+    public String toString() {
+        return (
+            "GlobalsComponent(\n"
+            + (
+                "gt=" + this.gt
+                + "\nexpr=" + this.expr
+            ).indent(2)
+            + "\n)"
+        );
+    }
 }

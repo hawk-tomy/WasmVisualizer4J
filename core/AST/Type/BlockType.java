@@ -25,4 +25,8 @@ public class BlockType {
             .parse(parser)
             .map(t -> new BlockType(new Some<>(t)));
     }
+
+    public String toString() {
+        return "BlockType(t=" + this.t + ')';
+    }
 }

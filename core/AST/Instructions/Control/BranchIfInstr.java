@@ -22,4 +22,8 @@ public class BranchIfInstr implements ControlInstr {
             case Ok(Integer idx) -> new Ok<>(new BranchIfInstr(idx));
         };
     }
+
+    public String toString() {
+        return "BranchIfInstr(uLabelIdx=" + this.uLabelIdx + ')';
+    }
 }

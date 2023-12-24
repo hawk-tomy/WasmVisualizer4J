@@ -33,4 +33,8 @@ public class ExportsComponent {
             case Ok(Byte ignored) -> new Err<>(new ParseException("Unknown Export Type."));
         };
     }
+
+    public String toString() {
+        return String.format("ExportsComponent(name='%s', type=%X, idx=%d)", this.name, this.type, this.idx);
+    }
 }

@@ -20,4 +20,8 @@ public class ParametricInstr implements Instruction {
         parser.next();
         return new Ok<>(new ParametricInstr(b == 0x1A));
     }
+
+    public String toString() {
+        return "ParametricInstr(isDrop=" + this.isDrop + ')';
+    }
 }

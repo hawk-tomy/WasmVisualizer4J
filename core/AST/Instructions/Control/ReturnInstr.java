@@ -14,4 +14,8 @@ public class ReturnInstr implements ControlInstr {
             return new Ok<>(new ReturnInstr());
         }
     }
+
+    public String toString() {
+        return "ReturnInstr";
+    }
 }

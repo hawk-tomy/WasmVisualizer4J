@@ -23,4 +23,9 @@ public final class ImportGlobalComponent implements ImportComponentBase {
             case Ok(GlobalType gt) -> new Ok<>(new ImportGlobalComponent(mod, name, gt));
         };
     }
+
+    public String toString() {
+        return String.format(
+            "ImportGlobalComponent(mod='%s', name='%s', gt=%s)", this.mod, this.name, this.gt.toString());
+    }
 }

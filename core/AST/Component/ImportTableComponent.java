@@ -23,4 +23,16 @@ public final class ImportTableComponent implements ImportComponentBase {
             case Ok(TableType tt) -> new Ok<>(new ImportTableComponent(mod, name, tt));
         };
     }
+
+    public String toString() {
+        return (
+            "ImportTableComponent(\n"
+            + (
+                "mod='" + this.mod + '\''
+                + "\nname='" + this.name + '\''
+                + "\ntt=" + this.tt
+            ).indent(2)
+            + "\n)"
+        );
+    }
 }

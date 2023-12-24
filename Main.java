@@ -8,7 +8,7 @@ import java.nio.file.Path;
 public class Main {
     public static void main(String[] args) {
         System.out.println("parse file count:" + args.length);
-        for (String pathStr: args) {
+        for (String pathStr : args) {
             System.out.println("[start] parse: " + pathStr);
             Path path = FileSystems
                 .getDefault()

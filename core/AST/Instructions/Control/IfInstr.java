@@ -7,6 +7,7 @@ import core.util.ParseException;
 import core.util.Result.Err;
 import core.util.Result.Ok;
 import core.util.Result.Result;
+import core.util.ToStringUtil;
 
 import java.util.ArrayList;
 
@@ -59,5 +60,17 @@ public class IfInstr implements ControlInstr {
         } else {
             return new Ok<>(new IfInstr(rt, in1, in2));
         }
+    }
+
+    public String toString() {
+        return (
+            "IfInstr("
+            + (
+                "rt=" + this.rt
+                + "\nin1=" + ToStringUtil.arrayList(this.in1)
+                + "\nin2=" + ToStringUtil.arrayList(this.in2)
+            ).indent(2)
+            + "\n)"
+        );
     }
 }

@@ -25,4 +25,15 @@ public class VariableInstr implements Instruction {
             default -> new Err<>(new ParseException("Unknown Instruction."));
         };
     }
+
+    public String toString() {
+        return (
+            "VariableInstr("
+            + (
+                "uIdx=" + this.uIdx
+                + "instr=" + String.format("%X", this.instr)
+            ).indent(2)
+            + "\n)"
+        );
+    }
 }

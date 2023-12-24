@@ -29,4 +29,8 @@ public class GlobalType {
         }
         return new Ok<>(new GlobalType(vt, isMut));
     }
+
+    public String toString() {
+        return "GlobalType(vt=" + this.vt + ", isMut=" + this.isMut + ')';
+    }
 }

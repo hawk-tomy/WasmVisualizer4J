@@ -23,4 +23,9 @@ public final class ImportMemoryComponent implements ImportComponentBase {
             case Ok(MemoryType mt) -> new Ok<>(new ImportMemoryComponent(mod, name, mt));
         };
     }
+
+    public String toString() {
+        return String.format(
+            "ImportMemoryComponent(mod='%s', name='%s', mt=%s)", this.mod, this.name, this.mt.toString());
+    }
 }

@@ -6,6 +6,7 @@ import core.util.ParseException;
 import core.util.Result.Err;
 import core.util.Result.Ok;
 import core.util.Result.Result;
+import core.util.ToStringUtil;
 
 import java.util.ArrayList;
 
@@ -40,5 +41,17 @@ public class CodeComponent {
         return parser
             .checkLength(beforeIndex, size)
             .map(ignored -> new CodeComponent(size, localValTypes, expr));
+    }
+
+    public String toString() {
+        return (
+            "CodeComponent("
+            + (
+                "size=" + this.size
+                + "\nlocalValTypes=" + ToStringUtil.arrayList(this.localValTypes)
+                + "\nexpr=" + this.expr
+            ).indent(2)
+            + "\n)"
+        );
     }
 }
