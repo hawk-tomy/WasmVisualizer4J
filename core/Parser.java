@@ -1,7 +1,12 @@
 package core;
 
+import core.AST.Module;
+import core.AST.Section.BaseSection;
 import core.parser.LEB128Parser;
 import core.util.InvalidIndexException;
+import core.util.Option.None;
+import core.util.Option.Option;
+import core.util.Option.Some;
 import core.util.ParseException;
 import core.util.Result.Err;
 import core.util.Result.Ok;
@@ -12,6 +17,7 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -31,6 +37,10 @@ public class Parser {
 
     public Integer getIndex() {
         return this.uIndex;
+    }
+
+    public Result<Module, ParseException> parse() {
+        return Module.parse(this);
     }
 
     public boolean hasNext() {
@@ -102,6 +112,37 @@ public class Parser {
 
     public Result<Long, ParseException> nextI64() {
         return this.integerP.nextI64();
+    }
+
+    /**
+     * spec 5.5.2 section_N(B) like method.
+     * if correct section, return Some<S>. otherwise, return None.
+     *
+     * @param id    section id.(N)
+     * @param parse (N, this) -> S(B)
+     * @param <S>   Section.
+     * @return parsed section.
+     */
+    public <S extends BaseSection> Option<Result<S, ParseException>> nextSection(
+        byte id,
+        BiFunction<Integer, Parser, Result<S, ParseException>> parse
+    ) {
+        if (this
+            .nextByte(id)
+            .isErr()) {
+            return new None<>(); // not correct section.
+        }
+        // get content length;
+        int length;
+        switch (this.nextU32()) {
+            case Err(ParseException e) -> {return new Some<>(new Err<>(e));}
+            case Ok(Integer i) -> length = i;
+        }
+        int beforeIndex = this.getIndex();
+        Result<S, ParseException> ret = parse.apply(length, this);
+        return new Some<>(this
+            .checkLength(beforeIndex, length)
+            .and(ret));
     }
 
     public <T> Result<ArrayList<T>, ParseException> nextVector(Function<Parser, Result<T, ParseException>> parse) {
