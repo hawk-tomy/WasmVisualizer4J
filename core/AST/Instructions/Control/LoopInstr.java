@@ -40,10 +40,9 @@ public class LoopInstr implements ControlInstr {
                 break;
             }
         }
-        if (parser.nextByte((byte) 0x0B) instanceof Err(ParseException e)) {
-            return new Err<>(e);
-        }
-        return new Ok<>(new LoopInstr(rt, its));
+        return parser
+            .nextByte((byte) 0x0B)
+            .map(ignored -> new LoopInstr(rt, its));
     }
 
     public String toString() {

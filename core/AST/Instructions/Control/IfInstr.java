@@ -58,11 +58,9 @@ public class IfInstr implements ControlInstr {
                 }
             }
         }
-        if (parser.nextByte((byte) 0x05) instanceof Err(ParseException e)) {
-            return new Err<>(e);
-        } else {
-            return new Ok<>(new IfInstr(rt, in1, in2));
-        }
+        return parser
+            .nextByte((byte) 0x05)
+            .map(ignored -> new IfInstr(rt, in1, in2));
     }
 
     public String toString() {
