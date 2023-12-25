@@ -197,7 +197,7 @@ public class Parser {
 
     public Result<Void, ParseException> checkLength(int beforeIndex, int length) {
         int realLength = this.getIndex() - beforeIndex;
-        int sign = realLength + length;
+        int sign = realLength - length;
         return (
             sign == 0
             ? new Ok<>(null)
