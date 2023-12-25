@@ -4,6 +4,7 @@ import core.AST.Type.FunctionType;
 import core.Parser;
 import core.util.ParseException;
 import core.util.Result.Result;
+import core.util.ToStringUtil;
 
 import java.util.ArrayList;
 
@@ -25,7 +26,7 @@ public final class TypeSection implements BaseSection {
             "TypeSection(\n"
             + (
                 "types="
-                + this.types
+                + ToStringUtil.arrayList(this.types)
             ).indent(2)
             + "\n)"
         );
