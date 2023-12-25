@@ -33,7 +33,7 @@ public class VariableInstr implements Instruction {
                 "uIdx=" + this.uIdx
                 + "instr=" + String.format("%X", this.instr)
             ).indent(2)
-            + "\n)"
+            + ")"
         );
     }
 }

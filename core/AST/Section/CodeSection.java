@@ -27,7 +27,7 @@ public final class CodeSection implements BaseSection {
             + (
                 "code=" + ToStringUtil.arrayList(this.code)
             ).indent(2)
-            + "\n)"
+            + ")"
         );
     }
 }

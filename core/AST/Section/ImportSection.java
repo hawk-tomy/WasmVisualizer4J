@@ -31,7 +31,7 @@ public final class ImportSection implements BaseSection {
                 "imports="
                 + ToStringUtil.arrayList(this.imports)
             ).indent(2)
-            + "\n)"
+            + ")"
         );
     }
 }

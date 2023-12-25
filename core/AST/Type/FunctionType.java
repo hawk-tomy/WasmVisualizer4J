@@ -44,7 +44,7 @@ public class FunctionType {
                 + "\nresults="
                 + ToStringUtil.arrayList(this.results)
             ).indent(2)
-            + "\n)"
+            + ")"
         );
     }
 }

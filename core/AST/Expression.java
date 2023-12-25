@@ -27,7 +27,7 @@ public class Expression {
         return (
             "Expression(\n"
             + ("instructions=" + ToStringUtil.arrayList(this.instructions)).indent(2)
-            + "\n)"
+            + ")"
         );
     }
 }

@@ -45,7 +45,7 @@ public class ElementsComponent {
                 + "\nexpr=" + this.expr
                 + "\nfuncIdx=" + ToStringUtil.arrayList(this.funcIdx)
             ).indent(2)
-            + "\n)"
+            + ")"
         );
     }
 }

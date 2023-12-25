@@ -28,7 +28,7 @@ public final class ElementSection implements BaseSection {
                 "elements="
                 + ToStringUtil.arrayList(this.elements)
             ).indent(2)
-            + "\n)"
+            + ")"
         );
     }
 }

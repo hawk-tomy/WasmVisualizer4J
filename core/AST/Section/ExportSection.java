@@ -28,7 +28,7 @@ public final class ExportSection implements BaseSection {
                 "exports="
                 + ToStringUtil.arrayList(this.exports)
             ).indent(2)
-            + "\n)"
+            + ")"
         );
     }
 }

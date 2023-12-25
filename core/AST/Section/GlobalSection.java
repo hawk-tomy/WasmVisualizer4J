@@ -28,7 +28,7 @@ public final class GlobalSection implements BaseSection {
                 "global="
                 + ToStringUtil.arrayList(this.global)
             ).indent(2)
-            + "\n)"
+            + ")"
         );
     }
 }

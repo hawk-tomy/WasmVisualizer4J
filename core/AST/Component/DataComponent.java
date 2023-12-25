@@ -58,7 +58,7 @@ public class DataComponent {
                 + "\nexpr=" + this.expr
                 + "\nbytes=" + s + "..."
             )
-            + "\n)"
+            + ")"
         );
     }
 }

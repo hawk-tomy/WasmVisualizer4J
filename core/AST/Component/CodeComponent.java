@@ -51,7 +51,7 @@ public class CodeComponent {
                 + "\nlocalValTypes=" + ToStringUtil.arrayList(this.localValTypes)
                 + "\nexpr=" + this.expr
             ).indent(2)
-            + "\n)"
+            + ")"
         );
     }
 }

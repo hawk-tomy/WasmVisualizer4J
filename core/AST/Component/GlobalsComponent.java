@@ -38,7 +38,7 @@ public class GlobalsComponent {
                 "gt=" + this.gt
                 + "\nexpr=" + this.expr
             ).indent(2)
-            + "\n)"
+            + ")"
         );
     }
 }

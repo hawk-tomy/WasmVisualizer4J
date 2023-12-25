@@ -8,7 +8,7 @@ public record Ok<T, E extends Exception>(T value) implements Result<T, E> {
     public String toString() {
         String v = this.value.toString();
         if (v.length() >= 120) {
-            v = "\n" + v.indent(2) + "\n";
+            v = "\n" + v.indent(2);
         }
         return "util.Result.Ok(" + v + ")";
     }

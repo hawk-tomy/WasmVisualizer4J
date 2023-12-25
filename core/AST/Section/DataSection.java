@@ -27,7 +27,7 @@ public final class DataSection implements BaseSection {
                 "data="
                 + this.data
             ).indent(2)
-            + "\n)"
+            + ")"
         );
     }
 }

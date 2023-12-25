@@ -28,7 +28,7 @@ public final class TypeSection implements BaseSection {
                 "types="
                 + ToStringUtil.arrayList(this.types)
             ).indent(2)
-            + "\n)"
+            + ")"
         );
     }
 }

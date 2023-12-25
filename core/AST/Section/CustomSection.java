@@ -53,7 +53,7 @@ public final class CustomSection implements BaseSection {
                 "name='" + this.name + "'\n"
                 + "custom=" + s + "..."
             ).indent(2)
-            + "\n)"
+            + ")"
         );
 
     }
