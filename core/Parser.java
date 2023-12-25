@@ -201,11 +201,13 @@ public class Parser {
         return (
             sign == 0
             ? new Ok<>(null)
-            : new Err<>(new ParseException((
-                                               sign < 0
-                                               ? "Content Size is less than expect."
-                                               : "Content Size is greater than expect."
-                                           ) + " (expect=" + length + ", got=" + realLength + ")"))
+            : new Err<>(new ParseException(
+                (
+                    sign < 0
+                    ? "Content Size is less than expect."
+                    : "Content Size is greater than expect."
+                ) + " (expect=" + length + ", got=" + realLength + ")"
+            ))
         );
     }
 }
