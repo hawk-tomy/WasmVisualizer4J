@@ -13,17 +13,11 @@ public class Main {
         String dir = args[0];
         var m = new Main();
         try (Stream<Path> paths = Files.walk(Path.of(dir))) {
-            System.out.println(paths
-                .map(Path::toFile)
-                .filter(File::isFile)
-                .filter(f -> f
-                    .getName()
-                    .endsWith("wasm"))
-                .map(f -> {
+            System.out.println(
+                paths.map(Path::toFile).filter(File::isFile).filter(f -> f.getName().endsWith("wasm")).map(f -> {
                     m.parseWasm(f);
                     return 0;
-                })
-                .count());
+                }).count());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -39,14 +33,12 @@ public class Main {
         }
 
         Parser p = new Parser(wasm);
-        try {
-            var ret = p.parse();
-            // System.out.println(path);
-            // System.out.println(ret);
-        } catch (Exception e) {
+        var ret = p.parse();
+        System.out.println(path);
+        System.out.println(ret);
+        if (ret.isErr()) {
             this.errCount++;
-            e.printStackTrace(System.err);
-            System.err.println("index: " + p.getIndex());
+            System.out.printf("index: 0x%x\n", p.getIndex());
         }
     }
 }
