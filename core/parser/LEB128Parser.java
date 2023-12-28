@@ -6,6 +6,7 @@ import core.util.ParseException;
 import core.util.Result.Err;
 import core.util.Result.Ok;
 import core.util.Result.Result;
+import core.util.UnsignedByteOp;
 
 import java.util.ArrayList;
 
@@ -30,7 +31,7 @@ public class LEB128Parser {
                 case Ok(Byte b_) -> b = b_;
             }
             bytes.add(b);
-            if (this.parser.takeByte(b, 7) == 0) {
+            if (UnsignedByteOp.takeByte(b, 7, 1) == 0) {
                 return new Ok<>(bytes);
             }
             i += 7;
@@ -45,7 +46,7 @@ public class LEB128Parser {
      * @return parse result. if ok, got Long value.
      */
     public Result<Long, ParseException> parseNumber(int bitWidth, boolean isSinged) {
-        if (!(0 < bitWidth && bitWidth <= 64)) {
+        if (bitWidth <= 0 || 64 < bitWidth) {
             throw new Error("invalid bit width");
         }
 
@@ -57,8 +58,8 @@ public class LEB128Parser {
             case Ok(ArrayList<Byte> bytes_) -> bytes = bytes_;
         }
         long v = 0;
-        for (int i = 0; i < bytes.size() - 1; i++) { // skip last byte.
-            v |= ((long) this.parser.takeByte(bytes.get(i), 0, 7)) << (i * 7);
+        for (int i = 0; i < bytes.size() - 1; i++) { // without last byte.
+            v |= ((long) UnsignedByteOp.takeByte(bytes.get(i), 0, 7)) << (i * 7);
         }
         byte uB = bytes.getLast();
         // max: 7bit x 9 + 1bit x 1 -> 10byte
@@ -93,15 +94,15 @@ public class LEB128Parser {
             case Err(ParseException e) -> new Err<>(e);
             // i & 0xffff_ffff_0000_0000L -> get over 32bit. if over 32bit is 0 -> can convert to int.
             case Ok(Long i) when (i & 0xffff_ffff_0000_0000L) == 0 -> new Ok<>(i.intValue());
-            default -> new Err<>(new ParseException("Overflow in parsing umber.(over 32bit)"));
+            default -> new Err<>(new ParseException("Overflow in parsing umber.(over unsigned 32bit)"));
         };
     }
 
     public Result<Integer, ParseException> nextI32() {
         return switch (this.parseNumber(32, true)) {
             case Err(ParseException e) -> new Err<>(e);
-            case Ok(Long i) when (Integer.MIN_VALUE < i) && (i < Integer.MAX_VALUE) -> new Ok<>(i.intValue());
-            default -> new Err<>(new ParseException("Overflow in parsing umber.(over 32bit)"));
+            case Ok(Long i) when (Integer.MIN_VALUE <= i) && (i <= Integer.MAX_VALUE) -> new Ok<>(i.intValue());
+            default -> new Err<>(new ParseException("Overflow in parsing umber.(over singed 32bit)"));
         };
     }
 
