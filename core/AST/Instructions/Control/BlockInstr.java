@@ -26,13 +26,13 @@ public class BlockInstr implements ControlInstr {
             case Err(ParseException e) -> {return new Err<>(e);}
             case Ok(BlockType rt_) -> rt = rt_;
         }
-        ArrayList<Instruction> its = new ArrayList<>();
-        while (parser.nextByte((byte) 0x0B).isErr()) {
-            if (Instruction.parse(parser) instanceof Ok(Instruction it)) {
-                its.add(it);
-            } else {
-                break;
-            }
+        ArrayList<Instruction> its;
+        switch (parser.nextSequence(
+            p -> p.nextByte((byte) 0x0B).isErr(),
+            Instruction::parse
+        )) {
+            case Err(ParseException e) -> {return new Err<>(e);}
+            case Ok(ArrayList<Instruction> its_) -> its = its_;
         }
         return new Ok<>(new BlockInstr(rt, its));
     }

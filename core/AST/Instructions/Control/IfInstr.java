@@ -28,28 +28,27 @@ public class IfInstr implements ControlInstr {
             case Err(ParseException e) -> {return new Err<>(e);}
             case Ok(BlockType rt_) -> rt = rt_;
         }
-        ArrayList<Instruction> in1 = new ArrayList<>();
-        while (parser
-            .peek()
-            .isOkAnd(b -> (b != 0x0B && b != 0x05))) {
-            parser.next();
-            if (Instruction.parse(parser) instanceof Ok(Instruction it)) {
-                in1.add(it);
-            } else {
-                break;
-            }
+        ArrayList<Instruction> in1;
+        switch (parser.nextSequence(
+            p -> p.peek().isOkAnd(b -> (b != 0x0B && b != 0x05)), // has byte and not end byte
+            Instruction::parse
+        )) {
+            case Err(ParseException e) -> {return new Err<>(e);}
+            case Ok(ArrayList<Instruction> in) -> in1 = in;
         }
-        ArrayList<Instruction> in2 = new ArrayList<>();
+        ArrayList<Instruction> in2;
         if (parser.nextByte((byte) 0x05).isOk()) {
-            while (parser.nextByte((byte) 0x0B).isErr()) {
-                if (Instruction.parse(parser) instanceof Ok(Instruction it)) {
-                    in1.add(it);
-                } else {
-                    break;
-                }
+            switch (parser.nextSequence(
+                p -> p.nextByte((byte) 0x0B).isErr(),
+                Instruction::parse
+            )) {
+                case Err(ParseException e) -> {return new Err<>(e);}
+                case Ok(ArrayList<Instruction> in) -> in2 = in;
             }
+        } else if (parser.nextByte((byte) 0x0B).isOk()) {
+            in2 = new ArrayList<>();
         } else {
-            parser.next(); // consume 0x0B
+            throw new Error("Unreachable");
         }
         return new Ok<>(new IfInstr(rt, in1, in2));
     }

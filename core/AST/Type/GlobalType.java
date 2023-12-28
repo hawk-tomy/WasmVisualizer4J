@@ -1,7 +1,6 @@
 package core.AST.Type;
 
 import core.Parser;
-import core.util.InvalidIndexException;
 import core.util.ParseException;
 import core.util.Result.Err;
 import core.util.Result.Ok;
@@ -22,12 +21,7 @@ public class GlobalType {
             case Err(ParseException e) -> {return new Err<>(e);}
             case Ok(ValueType vt_) -> vt = vt_;
         }
-        boolean isMut;
-        switch (parser.next()) {
-            case Err(InvalidIndexException e) -> {return new Err<>(e.into());}
-            case Ok(Byte b) -> isMut = b == (byte) 0x01;
-        }
-        return new Ok<>(new GlobalType(vt, isMut));
+        return parser.nextBoolean().map(isMut -> new GlobalType(vt, isMut));
     }
 
     public String toString() {

@@ -26,20 +26,9 @@ public class LoopInstr implements ControlInstr {
             case Err(ParseException e) -> {return new Err<>(e);}
             case Ok(BlockType rt_) -> rt = rt_;
         }
-        ArrayList<Instruction> its = new ArrayList<>();
-        while (parser
-            .peek()
-            .isOkAnd(b -> b != 0x0B)) {
-            parser.next();
-            if (Instruction.parse(parser) instanceof Ok(Instruction it)) {
-                its.add(it);
-            } else {
-                break;
-            }
-        }
         return parser
-            .nextByte((byte) 0x0B)
-            .map(ignored -> new LoopInstr(rt, its));
+            .nextSequence(p -> p.nextByte((byte) 0x0B).isErr(), Instruction::parse)
+            .map(its -> new LoopInstr(rt, its));
     }
 
     public String toString() {

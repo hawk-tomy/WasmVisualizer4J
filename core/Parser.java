@@ -113,21 +113,11 @@ public class Parser {
         };
     }
 
-    public Result<Integer, ParseException> nextU32() {
-        return this.integerP.nextU32();
-    }
+    public Result<Integer, ParseException> nextU32() {return this.integerP.nextU32();}
 
-    public Result<Integer, ParseException> nextI32() {
-        return this.integerP.nextI32();
-    }
+    public Result<Integer, ParseException> nextI32() {return this.integerP.nextI32();}
 
-    public Result<Long, ParseException> nextU64() {
-        return this.integerP.nextU64();
-    }
-
-    public Result<Long, ParseException> nextI64() {
-        return this.integerP.nextI64();
-    }
+    public Result<Long, ParseException> nextI64() {return this.integerP.nextI64();}
 
     /**
      * spec 5.5.2 section_N(B) like method.
@@ -212,16 +202,6 @@ public class Parser {
         byte[] array = new byte[bytes.size()];
         for (int i = 0; i < bytes.size(); i++) {array[i] = bytes.get(i);}
         return new Ok<>(new String(array, StandardCharsets.UTF_8));
-    }
-
-    public <T> ArrayList<T> parseSequence(Function<Parser, Result<T, ParseException>> parse) {
-        ArrayList<T> rets = new ArrayList<>();
-        while (true) {
-            switch (parse.apply(this)) {
-                case Err(ParseException ignored) -> {return rets;}
-                case Ok(T ret) -> rets.add(ret);
-            }
-        }
     }
 
     public Result<Void, ParseException> checkLength(int beforeIndex, int length) {

@@ -3,7 +3,6 @@ package core.AST;
 import core.AST.Instructions.Instruction;
 import core.Parser;
 import core.util.ParseException;
-import core.util.Result.Ok;
 import core.util.Result.Result;
 import core.util.ToStringUtil;
 
@@ -17,10 +16,7 @@ public class Expression {
     }
 
     public static Result<Expression, ParseException> parse(Parser parser) {
-        ArrayList<Instruction> instructions = parser.parseSequence(Instruction::parse);
-        return parser
-            .nextByte((byte) 0x0B)
-            .and(new Ok<>(new Expression(instructions)));
+        return parser.nextSequence(p -> p.nextByte((byte) 0x0B).isErr(), Instruction::parse).map(Expression::new);
     }
 
     public String toString() {

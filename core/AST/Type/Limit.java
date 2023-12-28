@@ -16,14 +16,9 @@ public class Limit {
 
     public static Result<Limit, ParseException> parse(Parser parser) {
         boolean hasMax;
-        if (parser
-            .nextByte((byte) 0x00)
-            .isOk()) {
-            hasMax = false;
-        } else if (parser.nextByte((byte) 0x01) instanceof Err(ParseException e)) {
-            return new Err<>(e);
-        } else {
-            hasMax = true;
+        switch (parser.nextBoolean()) {
+            case Err(ParseException e) -> {return new Err<>(e);}
+            case Ok(Boolean f) -> hasMax = f;
         }
         int uMin, uMax;
         switch (parser.nextU32()) {
