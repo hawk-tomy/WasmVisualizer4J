@@ -88,6 +88,31 @@ public class Parser {
         };
     }
 
+    public Result<ArrayList<Byte>, ParseException> nextBytes(int count) {
+        ArrayList<Byte> bytes = new ArrayList<>(count);
+        for (int i = 0; i < count; i++) {
+            switch (this.next()) {
+                case Err(InvalidIndexException e) -> {return new Err<>(e.into());}
+                case Ok(Byte b) -> bytes.add(b);
+            }
+        }
+        return new Ok<>(bytes);
+    }
+
+    public Result<Boolean, ParseException> nextBoolean() {
+        return switch (this.next()) {
+            case Err(InvalidIndexException e) -> new Err<>(e.into());
+            case Ok(Byte b) -> switch (b) {
+                case 0x00 -> new Ok<>(false);
+                case 0x01 -> new Ok<>(true);
+                default -> new Err<>(new ParseException(String.format(
+                    "Invalid Byte(expect=0x00 or 0x01,but got=0x%x)",
+                    b
+                )));
+            };
+        };
+    }
+
     public Result<Integer, ParseException> nextU32() {
         return this.integerP.nextU32();
     }
@@ -150,6 +175,28 @@ public class Parser {
             }
         }
         return new Ok<>(rst);
+    }
+
+    /**
+     * like: while (condition()) { parse() }
+     *
+     * @param condition call parse while this is true.
+     * @param parse     parser.
+     * @param <T>       return value Type of parse.
+     * @return if err return it, else return list of T
+     */
+    public <T> Result<ArrayList<T>, ParseException> nextSequence(
+        Predicate<Parser> condition,
+        Function<Parser, Result<T, ParseException>> parse
+    ) {
+        ArrayList<T> rets = new ArrayList<>();
+        while (condition.test(this)) {
+            switch (parse.apply(this)) {
+                case Err(ParseException e) -> {return new Err<>(e);}
+                case Ok(T ret) -> rets.add(ret);
+            }
+        }
+        return new Ok<>(rets);
     }
 
     public Result<String, ParseException> nextName() {
