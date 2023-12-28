@@ -30,18 +30,12 @@ public class BlockInstr implements ControlInstr {
             case Ok(BlockType rt_) -> rt = rt_;
         }
         ArrayList<Instruction> its = new ArrayList<>();
-        while (parser
-            .peek()
-            .isOkAnd(b -> b != 0x0B)) {
-            parser.next();
+        while (parser.nextByte((byte) 0x0B).isErr()) {
             if (Instruction.parse(parser) instanceof Ok(Instruction it)) {
                 its.add(it);
             } else {
                 break;
             }
-        }
-        if (parser.nextByte((byte) 0x0B) instanceof Err(ParseException e)) {
-            return new Err<>(e);
         }
         return new Ok<>(new BlockInstr(rt, its));
     }
