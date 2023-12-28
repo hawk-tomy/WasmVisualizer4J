@@ -1,5 +1,7 @@
 package core.util.Result;
 
+import core.util.Option.Option;
+
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -21,15 +23,9 @@ public sealed interface Result<T, E extends Exception> permits Ok, Err {
 
     boolean isErrAnd(Predicate<E> f);
 
-    /**
-     * @return nullable T
-     */
-    T ok();
+    Option<T> ok();
 
-    /**
-     * @return nullable E
-     */
-    E err();
+    Option<E> err();
 
     <U> Result<U, E> map(Function<T, U> f);
 

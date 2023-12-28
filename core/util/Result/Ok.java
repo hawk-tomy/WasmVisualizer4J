@@ -1,5 +1,9 @@
 package core.util.Result;
 
+import core.util.Option.None;
+import core.util.Option.Option;
+import core.util.Option.Some;
+
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -29,18 +33,12 @@ public record Ok<T, E extends Exception>(T value) implements Result<T, E> {
         return false;
     }
 
-    /**
-     * @return T
-     */
-    public T ok() {
-        return this.value;
+    public Option<T> ok() {
+        return new Some<>(this.value);
     }
 
-    /**
-     * @return always null
-     */
-    public E err() {
-        return null;
+    public Option<E> err() {
+        return new None<>();
     }
 
     public <U> Result<U, E> map(Function<T, U> f) {

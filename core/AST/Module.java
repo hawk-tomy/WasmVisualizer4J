@@ -69,7 +69,7 @@ public final class Module {
     }
 
     public static Result<Module, ParseException> parse(Parser parser) {
-        // check magic byte.
+        // check magic byte(0x0061736D).
         if (!(
             parser
                 .nextByte((byte) 0x00)
@@ -80,7 +80,7 @@ public final class Module {
         )) {
             return new Err<>(new ParseException("not wasm file. (magic byte is miss match)"));
         }
-        // check version.
+        // check version. only 0x01000000
         if (!(
             parser
                 .nextByte((byte) 0x01)
@@ -91,72 +91,66 @@ public final class Module {
         )) {
             return new Err<>(new ParseException("invalid version(not supported)"));
         }
-        ArrayList<CustomSection> customSections = Module.parseSequence((byte) 0x00,
-            CustomSection::parse, parser
-        );
 
-        ArrayList<TypeSection> types = Module.parseSequence((byte) 0x01, TypeSection::parse, parser);
-        customSections.addAll(Module.parseSequence((byte) 0x00, CustomSection::parse, parser));
+        try {
+            var customSections = Module.parseSequence((byte) 0x00, CustomSection::parse, parser).unwrap();
 
-        ArrayList<ImportSection> imports = Module.parseSequence((byte) 0x02, ImportSection::parse,
-            parser
-        );
-        customSections.addAll(Module.parseSequence((byte) 0x00, CustomSection::parse, parser));
+            var types = Module.parseSequence((byte) 0x01, TypeSection::parse, parser).unwrap();
+            Module.parseSequence((byte) 0x00, CustomSection::parse, parser).map(customSections::addAll).unwrap();
 
-        ArrayList<FunctionSection> functions = Module.parseSequence((byte) 0x03, FunctionSection::parse,
-            parser
-        );
-        customSections.addAll(Module.parseSequence((byte) 0x00, CustomSection::parse, parser));
+            var imports = Module.parseSequence((byte) 0x02, ImportSection::parse, parser).unwrap();
+            Module.parseSequence((byte) 0x00, CustomSection::parse, parser).map(customSections::addAll).unwrap();
 
-        ArrayList<TableSection> tables = Module.parseSequence((byte) 0x04, TableSection::parse, parser);
-        customSections.addAll(Module.parseSequence((byte) 0x00, CustomSection::parse, parser));
+            var functions = Module.parseSequence((byte) 0x03, FunctionSection::parse, parser).unwrap();
+            Module.parseSequence((byte) 0x00, CustomSection::parse, parser).map(customSections::addAll).unwrap();
 
-        ArrayList<MemorySection> memories = Module.parseSequence((byte) 0x05, MemorySection::parse,
-            parser
-        );
-        customSections.addAll(Module.parseSequence((byte) 0x00, CustomSection::parse, parser));
+            var tables = Module.parseSequence((byte) 0x04, TableSection::parse, parser).unwrap();
+            Module.parseSequence((byte) 0x00, CustomSection::parse, parser).map(customSections::addAll).unwrap();
 
-        ArrayList<GlobalSection> globals = Module.parseSequence((byte) 0x06, GlobalSection::parse,
-            parser
-        );
-        customSections.addAll(Module.parseSequence((byte) 0x00, CustomSection::parse, parser));
+            var memories = Module.parseSequence((byte) 0x05, MemorySection::parse, parser).unwrap();
+            Module.parseSequence((byte) 0x00, CustomSection::parse, parser).map(customSections::addAll).unwrap();
 
-        ArrayList<ExportSection> exports = Module.parseSequence((byte) 0x07, ExportSection::parse,
-            parser
-        );
-        customSections.addAll(Module.parseSequence((byte) 0x00, CustomSection::parse, parser));
+            var globals = Module.parseSequence((byte) 0x06, GlobalSection::parse, parser).unwrap();
+            Module.parseSequence((byte) 0x00, CustomSection::parse, parser).map(customSections::addAll).unwrap();
 
-        Option<StartSection> starts = Module.parseOptional((byte) 0x08, StartSection::parse, parser);
-        customSections.addAll(Module.parseSequence((byte) 0x00, CustomSection::parse, parser));
+            var exports = Module.parseSequence((byte) 0x07, ExportSection::parse, parser).unwrap();
+            Module.parseSequence((byte) 0x00, CustomSection::parse, parser).map(customSections::addAll).unwrap();
 
-        ArrayList<ElementSection> elements = Module.parseSequence((byte) 0x09, ElementSection::parse,
-            parser
-        );
-        customSections.addAll(Module.parseSequence((byte) 0x00, CustomSection::parse, parser));
+            Option<StartSection> starts = switch (parser.nextSection((byte) 0x08, StartSection::parse)) {
+                case Some(Result<StartSection, ParseException> ret) -> new Some<>(ret.unwrap());
+                case None<Result<StartSection, ParseException>> ignored -> new None<>();
+            };
+            Module.parseSequence((byte) 0x00, CustomSection::parse, parser).map(customSections::addAll).unwrap();
 
-        ArrayList<CodeSection> codes = Module.parseSequence((byte) 0x0a, CodeSection::parse, parser);
-        customSections.addAll(Module.parseSequence((byte) 0x00, CustomSection::parse, parser));
+            var elements = Module.parseSequence((byte) 0x09, ElementSection::parse, parser).unwrap();
+            Module.parseSequence((byte) 0x00, CustomSection::parse, parser).map(customSections::addAll).unwrap();
 
-        ArrayList<DataSection> data = Module.parseSequence((byte) 0x0b, DataSection::parse, parser);
-        customSections.addAll(Module.parseSequence((byte) 0x00, CustomSection::parse, parser));
+            var codes = Module.parseSequence((byte) 0x0a, CodeSection::parse, parser).unwrap();
+            Module.parseSequence((byte) 0x00, CustomSection::parse, parser).map(customSections::addAll).unwrap();
 
-        return new Ok<>(new Module(
-            customSections,
-            types,
-            imports,
-            functions,
-            tables,
-            memories,
-            globals,
-            exports,
-            starts,
-            elements,
-            codes,
-            data
-        ));
+            var data = Module.parseSequence((byte) 0x0b, DataSection::parse, parser).unwrap();
+            Module.parseSequence((byte) 0x00, CustomSection::parse, parser).map(customSections::addAll).unwrap();
+
+            return new Ok<>(new Module(
+                customSections,
+                types,
+                imports,
+                functions,
+                tables,
+                memories,
+                globals,
+                exports,
+                starts,
+                elements,
+                codes,
+                data
+            ));
+        } catch (ParseException e) {
+            return new Err<>(e);
+        }
     }
 
-    static <S extends BaseSection> ArrayList<S> parseSequence(
+    static <S extends BaseSection> Result<ArrayList<S>, ParseException> parseSequence(
         byte id,
         BiFunction<Integer, Parser, Result<S, ParseException>> parse,
         Parser parser
@@ -164,28 +158,14 @@ public final class Module {
         ArrayList<S> sections = new ArrayList<>();
         while (true) {
             if (parser.nextSection(id, parse) instanceof Some(Result<S, ParseException> ret)) {
-                if (ret instanceof Ok(S s)) {
-                    sections.add(s);
-                    continue;
+                switch (ret) {
+                    case Err(ParseException e) -> {return new Err<>(e);}
+                    case Ok(S s) -> sections.add(s);
                 }
+            } else {
+                return new Ok<>(sections);
             }
-            break;
         }
-        return sections;
-    }
-
-    static <S extends BaseSection> Option<S> parseOptional(
-        byte id,
-        BiFunction<Integer, Parser, Result<S, ParseException>> parse,
-        Parser parser
-    ) {
-        return switch (parser.nextSection(id, parse)) {
-            case Some(Result<S, ParseException> ret) -> switch (ret) {
-                case Err(ParseException ignored) -> new None<>();
-                case Ok(S s) -> new Some<>(s);
-            };
-            case None() -> new None<>();
-        };
     }
 
     public String toString() {
