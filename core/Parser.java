@@ -75,13 +75,14 @@ public class Parser {
 
     public Result<Void, ParseException> nextByte(byte id) {
         return switch (this.peek()) {
-            case Err(InvalidIndexException i) -> new Err<>(new ParseException("Invalid Type ID(expect FunctionType)"));
+            case Err(InvalidIndexException ignored) ->
+                new Err<>(new ParseException(String.format("Invalid Byte(expect=0x%x,but got=EOF", id)));
             case Ok(Byte b) -> {
                 if (b == id) {
-                    this.next();
+                    this.consume();
                     yield new Ok<>(null);
                 } else {
-                    yield new Err<>(new ParseException("Invalid Type ID(expect=" + id + ",but got=" + b + ")"));
+                    yield new Err<>(new ParseException(String.format("Invalid Byte(expect=0x%x,but got=0x%x)", id, b)));
                 }
             }
         };
@@ -127,9 +128,12 @@ public class Parser {
         }
         int beforeIndex = this.getIndex();
         Result<S, ParseException> ret = parse.apply(length, this);
-        return new Some<>(this
-            .checkLength(beforeIndex, length)
-            .and(ret));
+        if (ret.isErr()) {
+            return new Some<>(ret);
+        }
+        return new Some<>(
+            this.checkLength(beforeIndex, length).and(ret)
+        );
     }
 
     public <T> Result<ArrayList<T>, ParseException> nextVector(Function<Parser, Result<T, ParseException>> parse) {
@@ -179,13 +183,12 @@ public class Parser {
         return (
             sign == 0
             ? new Ok<>(null)
-            : new Err<>(new ParseException(
-                (
-                    sign < 0
-                    ? "Content Size is less than expect."
-                    : "Content Size is greater than expect."
-                ) + " (expect=" + length + ", got=" + realLength + ")"
-            ))
+            : new Err<>(new ParseException(String.format(
+                "Content Size is %s than expect. (expect=%d, got=%d)",
+                sign < 0 ? "less" : "greater",
+                length,
+                realLength
+            )))
         );
     }
 }
