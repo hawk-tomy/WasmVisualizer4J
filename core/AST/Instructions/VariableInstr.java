@@ -16,12 +16,7 @@ public class VariableInstr implements Instruction {
 
     public static Result<Instruction, ParseException> parse(Parser parser, byte b) {
         return switch (b) {
-            case 0x20, 0x21, 0x22, 0x23, 0x24 -> {
-                parser.next();
-                yield parser
-                    .nextU32()
-                    .map(idx -> new VariableInstr(idx, b));
-            }
+            case 0x20, 0x21, 0x22, 0x23, 0x24 -> parser.nextU32().map(idx -> new VariableInstr(idx, b));
             default -> new Err<>(new ParseException("Unknown Instruction."));
         };
     }

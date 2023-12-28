@@ -16,7 +16,6 @@ public class NumericInstr implements Instruction {
 
     public static Result<Instruction, ParseException> parse(Parser parser, byte b) {
         if (UnsignedByteOp.isInRange((byte) 0x41, b, (byte) 0xC0)) {
-            parser.next();
             return new Ok<>(new NumericInstr(b));
         }
         return new Err<>(new ParseException("Unknown Instruction."));

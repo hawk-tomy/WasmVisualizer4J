@@ -14,9 +14,6 @@ public class CallIndirectInstr implements ControlInstr {
     }
 
     public static Result<ControlInstr, ParseException> parse(Parser parser) {
-        if (parser.nextByte((byte) 0x10) instanceof Err(ParseException e)) {
-            return new Err<>(e);
-        }
         int typeIdx;
         switch (parser.nextU32()) {
             case Err(ParseException e) -> {return new Err<>(e);}

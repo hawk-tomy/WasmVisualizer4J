@@ -23,9 +23,6 @@ public class IfInstr implements ControlInstr {
     }
 
     public static Result<ControlInstr, ParseException> parse(Parser parser) {
-        if (parser.nextByte((byte) 0x04) instanceof Err(ParseException e)) {
-            return new Err<>(e);
-        }
         BlockType rt;
         switch (BlockType.parse(parser)) {
             case Err(ParseException e) -> {return new Err<>(e);}

@@ -19,9 +19,6 @@ public class BranchTableInstr implements ControlInstr {
     }
 
     public static Result<ControlInstr, ParseException> parse(Parser parser) {
-        if (parser.nextByte((byte) 0x0E) instanceof Err(ParseException e)) {
-            return new Err<>(e);
-        }
         ArrayList<Integer> labelIdxes;
         switch (parser.nextVector(Parser::nextU32)) {
             case Err(ParseException e) -> {return new Err<>(e);}

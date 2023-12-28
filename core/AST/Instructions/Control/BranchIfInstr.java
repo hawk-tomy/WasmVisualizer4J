@@ -2,7 +2,6 @@ package core.AST.Instructions.Control;
 
 import core.Parser;
 import core.util.ParseException;
-import core.util.Result.Err;
 import core.util.Result.Result;
 
 public class BranchIfInstr implements ControlInstr {
@@ -13,9 +12,6 @@ public class BranchIfInstr implements ControlInstr {
     }
 
     public static Result<ControlInstr, ParseException> parse(Parser parser) {
-        if (parser.nextByte((byte) 0x0D) instanceof Err(ParseException e)) {
-            return new Err<>(e);
-        }
         return parser.nextU32().map(BranchIfInstr::new);
     }
 

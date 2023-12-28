@@ -17,7 +17,6 @@ public class ParametricInstr implements Instruction {
         if (!(b == 0x1A || b == 0x1B)) {
             return new Err<>(new ParseException("Unknown Instruction."));
         }
-        parser.next();
         return new Ok<>(new ParametricInstr(b == 0x1A));
     }
 

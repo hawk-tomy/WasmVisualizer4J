@@ -19,7 +19,6 @@ public class MemoryInstr implements Instruction {
 
     public static Result<Instruction, ParseException> parse(Parser parser, byte b) {
         if (UnsignedByteOp.isInRange((byte) 0x28, b, (byte) 0x3F)) {
-            parser.next();
             int align, offset;
             switch (parser.nextU32()) {
                 case Err(ParseException e) -> {return new Err<>(e);}
@@ -31,7 +30,6 @@ public class MemoryInstr implements Instruction {
             }
             return new Ok<>(new MemoryInstr(b, align, offset));
         } else if (UnsignedByteOp.isInRange((byte) 0x3F, b, (byte) 0x41)) {
-            parser.next();
             return parser.nextByte((byte) 0x00).map(ignored -> new MemoryInstr(b, 0, 0));
         }
         return new Err<>(new ParseException("Unknown Instruction."));
