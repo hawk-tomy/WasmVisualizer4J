@@ -43,24 +43,18 @@ public class IfInstr implements ControlInstr {
             }
         }
         ArrayList<Instruction> in2 = new ArrayList<>();
-        if (parser
-            .peek()
-            .isOkAnd(b -> b != 0x05)) {
-            parser.next();
-            while (parser
-                .peek()
-                .isOkAnd(b -> b != 0x0B)) {
-                parser.next();
+        if (parser.nextByte((byte) 0x05).isOk()) {
+            while (parser.nextByte((byte) 0x0B).isErr()) {
                 if (Instruction.parse(parser) instanceof Ok(Instruction it)) {
                     in1.add(it);
                 } else {
                     break;
                 }
             }
+        } else {
+            parser.next(); // consume 0x0B
         }
-        return parser
-            .nextByte((byte) 0x05)
-            .map(ignored -> new IfInstr(rt, in1, in2));
+        return new Ok<>(new IfInstr(rt, in1, in2));
     }
 
     public String toString() {
