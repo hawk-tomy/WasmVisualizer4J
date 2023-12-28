@@ -40,29 +40,21 @@ public class Parser {
         return Module.parse(this);
     }
 
-    public boolean hasNext() {
-        return this.wasm.length > this.uIndex + 1;
-    }
-
     public Result<Byte, InvalidIndexException> peek() {
-        return this.peek(0);
-    }
-
-    public Result<Byte, InvalidIndexException> peek(int uIdx) {
-        int idx = this.uIndex + uIdx;
-        if (this.wasm.length <= idx) {
-            return new Err<>(new InvalidIndexException());
-        }
-        return new Ok<>(this.wasm[idx]);
-    }
-
-    public Result<Byte, InvalidIndexException> next() {
         if (this.wasm.length <= this.uIndex) {
             return new Err<>(new InvalidIndexException());
         }
-        byte b = this.wasm[this.uIndex];
+        return new Ok<>(this.wasm[this.uIndex]);
+    }
+
+    public Result<Byte, InvalidIndexException> next() {
+        var ret = this.peek();
+        this.consume();
+        return ret;
+    }
+
+    public void consume() {
         this.uIndex++;
-        return new Ok<>(b);
     }
 
     public Byte takeByte(byte b, int start) {
