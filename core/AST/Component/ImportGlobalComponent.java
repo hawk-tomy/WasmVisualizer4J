@@ -3,8 +3,6 @@ package core.AST.Component;
 import core.AST.Type.GlobalType;
 import core.Parser;
 import core.util.ParseException;
-import core.util.Result.Err;
-import core.util.Result.Ok;
 import core.util.Result.Result;
 
 public final class ImportGlobalComponent implements ImportComponentBase {
@@ -18,10 +16,7 @@ public final class ImportGlobalComponent implements ImportComponentBase {
     }
 
     public static Result<ImportComponentBase, ParseException> parseComponent(String mod, String name, Parser parser) {
-        return switch (core.AST.Type.GlobalType.parse(parser)) {
-            case Err(ParseException e) -> new Err<>(e);
-            case Ok(GlobalType gt) -> new Ok<>(new ImportGlobalComponent(mod, name, gt));
-        };
+        return GlobalType.parse(parser).map(gt -> new ImportGlobalComponent(mod, name, gt));
     }
 
     public String toString() {

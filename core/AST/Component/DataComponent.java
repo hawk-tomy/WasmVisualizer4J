@@ -33,14 +33,9 @@ public class DataComponent {
             case Err(ParseException e) -> {return new Err<>(e);}
             case Ok(Expression expr_) -> expr = expr_;
         }
-        ArrayList<Byte> bytes;
-        switch (parser.nextVector(p -> p
-            .next()
-            .mapErr(InvalidIndexException::into))) {
-            case Err(ParseException e) -> {return new Err<>(e);}
-            case Ok(ArrayList<Byte> bytes_) -> bytes = bytes_;
-        }
-        return new Ok<>(new DataComponent(memIdx, expr, bytes));
+        return parser
+            .nextVector(p -> p.next().mapErr(InvalidIndexException::into))
+            .map(bytes -> new DataComponent(memIdx, expr, bytes));
     }
 
     public String toString() {

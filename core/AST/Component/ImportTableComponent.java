@@ -3,8 +3,6 @@ package core.AST.Component;
 import core.AST.Type.TableType;
 import core.Parser;
 import core.util.ParseException;
-import core.util.Result.Err;
-import core.util.Result.Ok;
 import core.util.Result.Result;
 
 public final class ImportTableComponent implements ImportComponentBase {
@@ -18,10 +16,7 @@ public final class ImportTableComponent implements ImportComponentBase {
     }
 
     public static Result<ImportComponentBase, ParseException> parseComponent(String mod, String name, Parser parser) {
-        return switch (TableType.parse(parser)) {
-            case Err(ParseException e) -> new Err<>(e);
-            case Ok(TableType tt) -> new Ok<>(new ImportTableComponent(mod, name, tt));
-        };
+        return TableType.parse(parser).map(tt -> new ImportTableComponent(mod, name, tt));
     }
 
     public String toString() {

@@ -2,8 +2,6 @@ package core.AST.Component;
 
 import core.Parser;
 import core.util.ParseException;
-import core.util.Result.Err;
-import core.util.Result.Ok;
 import core.util.Result.Result;
 
 public final class ImportFunctionComponent implements ImportComponentBase {
@@ -17,10 +15,7 @@ public final class ImportFunctionComponent implements ImportComponentBase {
     }
 
     public static Result<ImportComponentBase, ParseException> parseComponent(String mod, String name, Parser parser) {
-        return switch (parser.nextU32()) {
-            case Err(ParseException e) -> new Err<>(e);
-            case Ok(Integer i) -> new Ok<>(new ImportFunctionComponent(mod, name, i));
-        };
+        return parser.nextU32().map(i -> new ImportFunctionComponent(mod, name, i));
     }
 
     public String toString() {

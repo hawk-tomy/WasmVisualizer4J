@@ -23,12 +23,7 @@ public class GlobalsComponent {
             case Err(ParseException e) -> {return new Err<>(e);}
             case Ok(GlobalType gt_) -> gt = gt_;
         }
-        Expression expr;
-        switch (Expression.parse(parser)) {
-            case Err(ParseException e) -> {return new Err<>(e);}
-            case Ok(Expression expr_) -> expr = expr_;
-        }
-        return new Ok<>(new GlobalsComponent(gt, expr));
+        return Expression.parse(parser).map(expr -> new GlobalsComponent(gt, expr));
     }
 
     public String toString() {
