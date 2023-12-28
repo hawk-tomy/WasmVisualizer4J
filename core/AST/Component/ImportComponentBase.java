@@ -1,6 +1,7 @@
 package core.AST.Component;
 
 import core.Parser;
+import core.util.InvalidIndexException;
 import core.util.ParseException;
 import core.util.Result.Err;
 import core.util.Result.Ok;
@@ -25,10 +26,16 @@ public sealed interface ImportComponentBase
             return ImportTableComponent.parseComponent(mod, name, parser);
         } else if (parser.nextByte((byte) 0x02).isOk()) {
             return ImportMemoryComponent.parseComponent(mod, name, parser);
-        } else if (parser.nextByte((byte) 0x03) instanceof Err(ParseException e)) {
-            return new Err<>(e);
-        } else {
+        } else if (parser.nextByte((byte) 0x03).isOk()) {
             return ImportGlobalComponent.parseComponent(mod, name, parser);
+        } else {
+            return new Err<>(switch (parser.peek()) {
+                case Err(InvalidIndexException e) -> e.into();
+                case Ok(Byte b) -> new ParseException(String.format(
+                    "Invalid Byte(expect=0x00 ~ 0x02, got=0x%x",
+                    b
+                ));
+            });
         }
     }
 }
