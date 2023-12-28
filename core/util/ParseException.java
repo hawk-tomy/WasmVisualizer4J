@@ -1,7 +1,6 @@
 package core.util;
 
 public class ParseException extends Exception {
-
     public final String msg;
 
     public ParseException(String msg) {

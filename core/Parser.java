@@ -22,7 +22,6 @@ import java.util.function.Predicate;
  * note: u** fields are only allow unsigned integer.
  */
 public class Parser {
-
     private final byte[] wasm;
     private final LEB128Parser integerP;
     private Integer uIndex;
@@ -125,9 +124,7 @@ public class Parser {
         byte id,
         BiFunction<Integer, Parser, Result<S, ParseException>> parse
     ) {
-        if (this
-            .nextByte(id)
-            .isErr()) {
+        if (this.nextByte(id).isErr()) {
             return new None<>(); // not correct section.
         }
         // get content length;

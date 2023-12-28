@@ -23,9 +23,7 @@ public class LEB128Test {
         // test for parse leb128. see ./test/leb128
 
         System.out.println("u32: start");
-        Path path_u32 = FileSystems
-            .getDefault()
-            .getPath("./core/test/leb128/u32_case.txt");
+        Path path_u32 = FileSystems.getDefault().getPath("./core/test/leb128/u32_case.txt");
 
         ArrayList<Integer> u32Numbers = new ArrayList<>();
         ArrayList<Byte> u32Bytes_ = new ArrayList<>();
@@ -50,9 +48,7 @@ public class LEB128Test {
         for (int i = 0; i < u32Numbers.size(); i++) {
             failed |= switch (lp_u32.nextU32()) {
                 case Ok(Integer v) -> {
-                    if (!u32Numbers
-                        .get(i)
-                        .equals(v)) {
+                    if (!u32Numbers.get(i).equals(v)) {
                         System.out.println(
                             "parse u32 err: " + u32Numbers.get(i) + " != " + v + ", idx=" + i + ", uIdx="
                             + parser_u32.getIndex());
@@ -73,9 +69,7 @@ public class LEB128Test {
         }
 
         System.out.println("i32: start");
-        Path path_i32 = FileSystems
-            .getDefault()
-            .getPath("./core/test/leb128/i32_case.txt");
+        Path path_i32 = FileSystems.getDefault().getPath("./core/test/leb128/i32_case.txt");
 
         ArrayList<Integer> i32Numbers = new ArrayList<>();
         ArrayList<Byte> i32Bytes_ = new ArrayList<>();
@@ -100,9 +94,7 @@ public class LEB128Test {
         for (int i = 0; i < i32Numbers.size(); i++) {
             failed |= switch (lp_i32.nextI32()) {
                 case Ok(Integer v) -> {
-                    if (!i32Numbers
-                        .get(i)
-                        .equals(v)) {
+                    if (!i32Numbers.get(i).equals(v)) {
                         System.out.println(
                             "parse i32 err: " + i32Numbers.get(i) + " != " + v + ", idx=" + i + ", uIdx="
                             + parser_i32.getIndex());
@@ -123,9 +115,7 @@ public class LEB128Test {
         }
 
         System.out.println("u64: start");
-        Path path_u64 = FileSystems
-            .getDefault()
-            .getPath("./core/test/leb128/u64_case.txt");
+        Path path_u64 = FileSystems.getDefault().getPath("./core/test/leb128/u64_case.txt");
 
         ArrayList<Long> u64Numbers = new ArrayList<>();
         ArrayList<Byte> u64Bytes_ = new ArrayList<>();
@@ -150,9 +140,7 @@ public class LEB128Test {
         for (int i = 0; i < u64Numbers.size(); i++) {
             failed |= switch (lp_u64.nextU64()) {
                 case Ok(Long v) -> {
-                    if (!u64Numbers
-                        .get(i)
-                        .equals(v)) {
+                    if (!u64Numbers.get(i).equals(v)) {
                         System.out.println(
                             "parse u64 err: " + u64Numbers.get(i) + " != " + v + ", idx=" + i + ", uIdx="
                             + parser_u64.getIndex());
@@ -173,9 +161,7 @@ public class LEB128Test {
         }
 
         System.out.println("i64: start");
-        Path path_i64 = FileSystems
-            .getDefault()
-            .getPath("./core/test/leb128/i64_case.txt");
+        Path path_i64 = FileSystems.getDefault().getPath("./core/test/leb128/i64_case.txt");
 
         ArrayList<Long> i64Numbers = new ArrayList<>();
         ArrayList<Byte> i64Bytes_ = new ArrayList<>();
@@ -200,9 +186,7 @@ public class LEB128Test {
         for (int i = 0; i < i64Numbers.size(); i++) {
             failed |= switch (lp_i64.nextI64()) {
                 case Ok(Long v) -> {
-                    if (!i64Numbers
-                        .get(i)
-                        .equals(v)) {
+                    if (!i64Numbers.get(i).equals(v)) {
                         System.out.println(
                             "parse i64 err: " + i64Numbers.get(i) + " != " + v + ", idx=" + i + ", uIdx="
                             + parser_i64.getIndex());

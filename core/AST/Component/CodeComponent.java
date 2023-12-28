@@ -38,9 +38,7 @@ public class CodeComponent {
             case Err(ParseException e) -> {return new Err<>(e);}
             case Ok(Expression expr_) -> expr = expr_;
         }
-        return parser
-            .checkLength(beforeIndex, size)
-            .map(ignored -> new CodeComponent(size, localValTypes, expr));
+        return parser.checkLength(beforeIndex, size).map(ignored -> new CodeComponent(size, localValTypes, expr));
     }
 
     public String toString() {

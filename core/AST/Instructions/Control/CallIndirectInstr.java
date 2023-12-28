@@ -22,9 +22,7 @@ public class CallIndirectInstr implements ControlInstr {
             case Err(ParseException e) -> {return new Err<>(e);}
             case Ok(Integer idx) -> typeIdx = idx;
         }
-        return parser
-            .nextByte((byte) 0x00)
-            .map(ignored -> new CallIndirectInstr(typeIdx));
+        return parser.nextByte((byte) 0x00).map(ignored -> new CallIndirectInstr(typeIdx));
     }
 
     public String toString() {

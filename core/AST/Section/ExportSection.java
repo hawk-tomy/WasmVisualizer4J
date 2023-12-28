@@ -16,9 +16,7 @@ public final class ExportSection implements BaseSection {
     }
 
     public static Result<ExportSection, ParseException> parse(int length, Parser parser) {
-        return parser
-            .nextVector(ExportsComponent::parse)
-            .map(ExportSection::new);
+        return parser.nextVector(ExportsComponent::parse).map(ExportSection::new);
     }
 
     public String toString() {

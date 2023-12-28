@@ -16,9 +16,7 @@ public final class ElementSection implements BaseSection {
     }
 
     public static Result<ElementSection, ParseException> parse(int length, Parser parser) {
-        return parser
-            .nextVector(ElementsComponent::parse)
-            .map(ElementSection::new);
+        return parser.nextVector(ElementsComponent::parse).map(ElementSection::new);
     }
 
     public String toString() {

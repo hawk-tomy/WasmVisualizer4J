@@ -27,9 +27,8 @@ public class ExportsComponent {
         }
         return switch (parser.next()) {
             case Err(InvalidIndexException e) -> new Err<>(e.into());
-            case Ok(Byte b) when UnsignedByteOp.isInRange((byte) 0x00, b, (byte) 0x04) -> parser
-                .nextU32()
-                .map(idx -> new ExportsComponent(name, b, idx));
+            case Ok(Byte b) when UnsignedByteOp.isInRange((byte) 0x00, b, (byte) 0x04) ->
+                parser.nextU32().map(idx -> new ExportsComponent(name, b, idx));
             case Ok(Byte ignored) -> new Err<>(new ParseException("Unknown Export Type."));
         };
     }

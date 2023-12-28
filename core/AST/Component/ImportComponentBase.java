@@ -18,17 +18,12 @@ public sealed interface ImportComponentBase
             case Err(ParseException e) -> {return new Err<>(e);}
             case Ok(String name_) -> name = name_;
         }
-        if (parser
-            .nextByte((byte) 0x00)
-            .isOk()) {
+
+        if (parser.nextByte((byte) 0x00).isOk()) {
             return ImportFunctionComponent.parseComponent(mod, name, parser);
-        } else if (parser
-            .nextByte((byte) 0x01)
-            .isOk()) {
+        } else if (parser.nextByte((byte) 0x01).isOk()) {
             return ImportTableComponent.parseComponent(mod, name, parser);
-        } else if (parser
-            .nextByte((byte) 0x02)
-            .isOk()) {
+        } else if (parser.nextByte((byte) 0x02).isOk()) {
             return ImportMemoryComponent.parseComponent(mod, name, parser);
         } else if (parser.nextByte((byte) 0x03) instanceof Err(ParseException e)) {
             return new Err<>(e);
@@ -36,5 +31,4 @@ public sealed interface ImportComponentBase
             return ImportGlobalComponent.parseComponent(mod, name, parser);
         }
     }
-
 }

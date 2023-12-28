@@ -14,8 +14,6 @@ public record localValType(int count, ValueType valType) {
             case Err(ParseException e) -> {return new Err<>(e);}
             case Ok(Integer count_) -> count = count_;
         }
-        return ValueType
-            .parse(parser)
-            .map(valueType -> new localValType(count, valueType));
+        return ValueType.parse(parser).map(valueType -> new localValType(count, valueType));
     }
 }

@@ -16,9 +16,7 @@ public final class CodeSection implements BaseSection {
     }
 
     public static Result<CodeSection, ParseException> parse(int length, Parser parser) {
-        return parser
-            .nextVector(CodeComponent::parse)
-            .map(CodeSection::new);
+        return parser.nextVector(CodeComponent::parse).map(CodeSection::new);
     }
 
     public String toString() {

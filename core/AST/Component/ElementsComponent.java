@@ -32,9 +32,7 @@ public class ElementsComponent {
             case Err(ParseException e) -> {return new Err<>(e);}
             case Ok(Expression expr_) -> expr = expr_;
         }
-        return parser
-            .nextVector(Parser::nextU32)
-            .map(idxes -> new ElementsComponent(tableIdx, expr, idxes));
+        return parser.nextVector(Parser::nextU32).map(idxes -> new ElementsComponent(tableIdx, expr, idxes));
     }
 
     public String toString() {

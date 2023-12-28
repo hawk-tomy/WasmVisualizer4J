@@ -15,9 +15,7 @@ public final class MemorySection implements BaseSection {
     }
 
     public static Result<MemorySection, ParseException> parse(int length, Parser parser) {
-        return parser
-            .nextVector(MemoryType::parse)
-            .map(MemorySection::new);
+        return parser.nextVector(MemoryType::parse).map(MemorySection::new);
     }
 
     public String toString() {

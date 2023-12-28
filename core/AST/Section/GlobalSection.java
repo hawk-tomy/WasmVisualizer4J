@@ -16,9 +16,7 @@ public final class GlobalSection implements BaseSection {
     }
 
     public static Result<GlobalSection, ParseException> parse(int length, Parser parser) {
-        return parser
-            .nextVector(GlobalsComponent::parse)
-            .map(GlobalSection::new);
+        return parser.nextVector(GlobalsComponent::parse).map(GlobalSection::new);
     }
 
     public String toString() {

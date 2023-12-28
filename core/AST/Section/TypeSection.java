@@ -16,9 +16,7 @@ public final class TypeSection implements BaseSection {
     }
 
     public static Result<TypeSection, ParseException> parse(int length, Parser parser) {
-        return parser
-            .nextVector(FunctionType::parse)
-            .map(TypeSection::new);
+        return parser.nextVector(FunctionType::parse).map(TypeSection::new);
     }
 
     public String toString() {

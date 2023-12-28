@@ -16,9 +16,7 @@ public class CallInstr implements ControlInstr {
         if (parser.nextByte((byte) 0x10) instanceof Err(ParseException e)) {
             return new Err<>(e);
         }
-        return parser
-            .nextU32()
-            .map(CallInstr::new);
+        return parser.nextU32().map(CallInstr::new);
     }
 
     public String toString() {

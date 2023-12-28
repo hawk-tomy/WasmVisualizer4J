@@ -16,14 +16,8 @@ public class BlockType {
     }
 
     public static Result<BlockType, ParseException> parse(Parser parser) {
-        if (parser
-            .nextByte((byte) 0x40)
-            .isOk()) {
-            return new Ok<>(new BlockType(new None<>()));
-        }
-        return ValueType
-            .parse(parser)
-            .map(t -> new BlockType(new Some<>(t)));
+        if (parser.nextByte((byte) 0x40).isOk()) {return new Ok<>(new BlockType(new None<>()));}
+        return ValueType.parse(parser).map(t -> new BlockType(new Some<>(t)));
     }
 
     public String toString() {

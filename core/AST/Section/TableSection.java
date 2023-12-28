@@ -16,9 +16,7 @@ public final class TableSection implements BaseSection {
     }
 
     public static Result<TableSection, ParseException> parse(int length, Parser parser) {
-        return parser
-            .nextVector(TableType::parse)
-            .map(TableSection::new);
+        return parser.nextVector(TableType::parse).map(TableSection::new);
     }
 
     public String toString() {

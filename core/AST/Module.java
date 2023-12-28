@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.function.BiFunction;
 
 public final class Module {
-
     ArrayList<CustomSection> customSections;
     ArrayList<TypeSection> types;
     ArrayList<ImportSection> imports;

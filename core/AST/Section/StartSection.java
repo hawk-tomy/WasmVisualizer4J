@@ -12,9 +12,7 @@ public final class StartSection implements BaseSection {
     }
 
     public static Result<StartSection, ParseException> parse(int length, Parser parser) {
-        return parser
-            .nextU32()
-            .map(StartSection::new);
+        return parser.nextU32().map(StartSection::new);
     }
 
     public String toString() {

@@ -15,8 +15,8 @@ public class LEB128Parser {
     public LEB128Parser(Parser parser) {
         this.parser = parser;
     }
-    // parse LEB128 u64/i64 -> if 32bit, check under max and over min.
 
+    // parse LEB128 u64/i64 -> if 32bit, check under max and over min.
     // parse LEB128 encoding. first bit is 0 mean end Byte. data are sorted LE.
     // `0b1aaaaaaa 0b1bbbbbbb 0b0ccccccc` -> 0bcccccccbbbbbbbaaaaaaa
     // get '(0b1a...a)+ 0b0a...a'
@@ -26,9 +26,7 @@ public class LEB128Parser {
         byte b;
         do {
             switch (this.parser.next()) {
-                case Err(InvalidIndexException e) -> {
-                    return new Err<>(e.into());
-                }
+                case Err(InvalidIndexException e) -> {return new Err<>(e.into());}
                 case Ok(Byte b_) -> b = b_;
             }
             bytes.add(b);

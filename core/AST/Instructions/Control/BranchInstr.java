@@ -16,9 +16,7 @@ public class BranchInstr implements ControlInstr {
         if (parser.nextByte((byte) 0x0C) instanceof Err(ParseException e)) {
             return new Err<>(e);
         }
-        return parser
-            .nextU32()
-            .map(BranchInstr::new);
+        return parser.nextU32().map(BranchInstr::new);
     }
 
     public String toString() {

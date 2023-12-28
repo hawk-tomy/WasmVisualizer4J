@@ -15,9 +15,7 @@ public final class DataSection implements BaseSection {
     }
 
     public static Result<DataSection, ParseException> parse(int length, Parser parser) {
-        return parser
-            .nextVector(DataComponent::parse)
-            .map(DataSection::new);
+        return parser.nextVector(DataComponent::parse).map(DataSection::new);
     }
 
     public String toString() {

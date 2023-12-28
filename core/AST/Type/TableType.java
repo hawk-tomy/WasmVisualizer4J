@@ -16,9 +16,7 @@ public class TableType {
         if (parser.nextByte((byte) 0x70) instanceof Err(ParseException e)) {
             return new Err<>(e);
         }
-        return Limit
-            .parse(parser)
-            .map(TableType::new);
+        return Limit.parse(parser).map(TableType::new);
     }
 
     public String toString() {

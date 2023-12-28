@@ -27,9 +27,7 @@ public class BranchTableInstr implements ControlInstr {
             case Err(ParseException e) -> {return new Err<>(e);}
             case Ok(ArrayList<Integer> idxes) -> labelIdxes = idxes;
         }
-        return parser
-            .nextU32()
-            .map(idx -> new BranchTableInstr(labelIdxes, idx));
+        return parser.nextU32().map(idx -> new BranchTableInstr(labelIdxes, idx));
     }
 
     public String toString() {
