@@ -23,11 +23,11 @@ public class FunctionType {
             return new Err<>(e);
         }
         ArrayList<ValueType> parameters;
-        ArrayList<ValueType> results;
         switch (parser.nextVector(ValueType::parse)) {
             case Err(ParseException e) -> {return new Err<>(e);}
             case Ok(ArrayList<ValueType> params) -> parameters = params;
         }
+        ArrayList<ValueType> results;
         switch (parser.nextVector(ValueType::parse)) {
             case Err(ParseException e) -> {return new Err<>(e);}
             case Ok(ArrayList<ValueType> rsts) -> results = rsts;

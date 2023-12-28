@@ -21,6 +21,9 @@ public final class CustomSection implements BaseSection {
 
     public static Result<CustomSection, ParseException> parse(int length, Parser parser) {
         // load name
+        if (length == 0) {
+            return new Err<>(new ParseException("Empty Custom Section (NoName)"));
+        }
         String name;
         int beforeIndex = parser.getIndex();
         switch (parser.nextName()) {

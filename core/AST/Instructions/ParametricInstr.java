@@ -14,7 +14,7 @@ public class ParametricInstr implements Instruction {
     }
 
     public static Result<Instruction, ParseException> parse(Parser parser, byte b) {
-        if (!(b == 0x1A || b == 0x1B)) {
+        if (b != 0x1A && b != 0x1B) {
             return new Err<>(new ParseException("Unknown Instruction."));
         }
         return new Ok<>(new ParametricInstr(b == 0x1A));
