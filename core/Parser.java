@@ -12,13 +12,11 @@ import core.util.Result.Err;
 import core.util.Result.Ok;
 import core.util.Result.Result;
 
-import java.nio.ByteBuffer;
-import java.nio.charset.CharacterCodingException;
-import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * note: u** fields are only allow unsigned integer.
@@ -165,24 +163,15 @@ public class Parser {
         // b*: Vector<byte> -> name: if utf(name) == b*
         ArrayList<Byte> bytes;
         // get string bytes. parse: get byte and error convert to correct type.
-        switch (this.nextVector((p) -> p
-            .next()
-            .orElse((e) -> new Err<>(e.into())))) {
+        switch (this.nextVector(
+            p -> p.next().mapErr(InvalidIndexException::into)
+        )) {
             case Err(ParseException e) -> {return new Err<>(e);}
             case Ok(ArrayList<Byte> bytes_) -> bytes = bytes_;
         }
-        ByteBuffer buff = ByteBuffer.allocateDirect(bytes.size());
-        for (Byte b : bytes) {
-            buff.put(b);
-        }
-        CharsetDecoder d = StandardCharsets.UTF_8.newDecoder();
-        try {
-            return new Ok<>(d
-                .decode(buff)
-                .toString());
-        } catch (CharacterCodingException e) {
-            return new Err<>(new ParseException("utf-8 decode Error:\n" + e));
-        }
+        byte[] array = new byte[bytes.size()];
+        for (int i = 0; i < bytes.size(); i++) {array[i] = bytes.get(i);}
+        return new Ok<>(new String(array, StandardCharsets.UTF_8));
     }
 
     public <T> ArrayList<T> parseSequence(Function<Parser, Result<T, ParseException>> parse) {
