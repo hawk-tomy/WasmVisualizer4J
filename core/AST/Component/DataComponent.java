@@ -7,10 +7,9 @@ import core.util.ParseException;
 import core.util.Result.Err;
 import core.util.Result.Ok;
 import core.util.Result.Result;
+import core.util.ToStringUtil;
 
 import java.util.ArrayList;
-import java.util.HexFormat;
-import java.util.stream.Collectors;
 
 public class DataComponent {
     int memIdx;
@@ -45,20 +44,14 @@ public class DataComponent {
     }
 
     public String toString() {
-        HexFormat f = HexFormat.of();
-        String s = this.bytes
-            .subList(0, 10)
-            .stream()
-            .map(f::toHexDigits)
-            .collect(Collectors.joining());
         return (
             "DataComponent("
             + (
                 "memIdx=" + this.memIdx
                 + "\nexpr=" + this.expr
-                + "\nbytes=" + s + "..."
+                + "\nbytes=" + ToStringUtil.byteList(this.bytes)
             )
-            + ")"
+            + ')'
         );
     }
 }

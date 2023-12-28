@@ -27,7 +27,7 @@ public final class FunctionSection implements BaseSection {
                 "type_indexes="
                 + ToStringUtil.arrayList(this.type_indexes)
             ).indent(2)
-            + ")"
+            + ')'
         );
     }
 }

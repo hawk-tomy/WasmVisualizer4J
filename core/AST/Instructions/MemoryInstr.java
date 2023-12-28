@@ -40,6 +40,6 @@ public class MemoryInstr implements Instruction {
     }
 
     public String toString() {
-        return String.format("MemoryInstr(instr=%X, align=%d, offset=%d)", this.instr, this.align, this.offset);
+        return String.format("MemoryInstr(instr=0x%X, align=%d, offset=%d)", this.instr, this.align, this.offset);
     }
 }

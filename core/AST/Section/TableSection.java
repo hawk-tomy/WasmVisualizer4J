@@ -28,7 +28,7 @@ public final class TableSection implements BaseSection {
                 "tts="
                 + ToStringUtil.arrayList(this.tts)
             ).indent(2)
-            + ")"
+            + ')'
         );
     }
 }

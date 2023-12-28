@@ -10,7 +10,7 @@ public record Ok<T, E extends Exception>(T value) implements Result<T, E> {
         if (v.length() >= 120) {
             v = "\n" + v.indent(2);
         }
-        return "util.Result.Ok(" + v + ")";
+        return String.format("util.Result.Ok(%s)", v);
     }
 
     public boolean isOk() {

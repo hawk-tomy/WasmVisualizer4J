@@ -23,6 +23,6 @@ public class NumericInstr implements Instruction {
     }
 
     public String toString() {
-        return String.format("NumericInstr(instr=%X)", this.instr);
+        return String.format("NumericInstr(instr=0x%X)", this.instr);
     }
 }

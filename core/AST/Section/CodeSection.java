@@ -23,11 +23,11 @@ public final class CodeSection implements BaseSection {
 
     public String toString() {
         return (
-            "CodeSection("
+            "CodeSection(\n"
             + (
                 "code=" + ToStringUtil.arrayList(this.code)
             ).indent(2)
-            + ")"
+            + ')'
         );
     }
 }

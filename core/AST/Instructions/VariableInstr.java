@@ -28,12 +28,12 @@ public class VariableInstr implements Instruction {
 
     public String toString() {
         return (
-            "VariableInstr("
+            "VariableInstr(\n"
             + (
                 "uIdx=" + this.uIdx
-                + "instr=" + String.format("%X", this.instr)
+                + "\ninstr=" + String.format("0x%X", this.instr)
             ).indent(2)
-            + ")"
+            + ')'
         );
     }
 }

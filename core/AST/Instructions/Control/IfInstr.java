@@ -65,7 +65,7 @@ public class IfInstr implements ControlInstr {
                 + "\nin1=" + ToStringUtil.arrayList(this.in1)
                 + "\nin2=" + ToStringUtil.arrayList(this.in2)
             ).indent(2)
-            + ")"
+            + ')'
         );
     }
 }

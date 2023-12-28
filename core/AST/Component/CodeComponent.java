@@ -45,13 +45,13 @@ public class CodeComponent {
 
     public String toString() {
         return (
-            "CodeComponent("
+            "CodeComponent(\n"
             + (
                 "size=" + this.size
                 + "\nlocalValTypes=" + ToStringUtil.arrayList(this.localValTypes)
                 + "\nexpr=" + this.expr
             ).indent(2)
-            + ")"
+            + ')'
         );
     }
 }

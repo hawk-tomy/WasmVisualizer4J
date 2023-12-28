@@ -52,7 +52,7 @@ public class LoopInstr implements ControlInstr {
                 "rt=" + this.rt
                 + "\nits=" + ToStringUtil.arrayList(this.its)
             ).indent(2)
-            + ")"
+            + ')'
         );
     }
 }

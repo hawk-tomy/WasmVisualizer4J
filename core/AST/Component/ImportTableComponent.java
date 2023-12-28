@@ -32,7 +32,7 @@ public final class ImportTableComponent implements ImportComponentBase {
                 + "\nname='" + this.name + '\''
                 + "\ntt=" + this.tt
             ).indent(2)
-            + ")"
+            + ')'
         );
     }
 }

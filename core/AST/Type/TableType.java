@@ -22,6 +22,6 @@ public class TableType {
     }
 
     public String toString() {
-        return "TableType(limit=" + this.limit + ")";
+        return String.format("TableType(limit=%s)", this.limit);
     }
 }

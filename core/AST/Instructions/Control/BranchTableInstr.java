@@ -39,7 +39,7 @@ public class BranchTableInstr implements ControlInstr {
                 "uLabelIdxes=" + ToStringUtil.arrayList(this.uLabelIdxes)
                 + "\ndefaultLabelIdx=" + this.defaultLabelIdx
             ).indent(2)
-            + ")"
+            + ')'
         );
     }
 }

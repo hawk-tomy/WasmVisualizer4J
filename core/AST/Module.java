@@ -206,7 +206,7 @@ public final class Module {
                 + "\ncodes=" + ToStringUtil.arrayList(this.codes)
                 + "\ndata=" + ToStringUtil.arrayList(this.data)
             ).indent(2)
-            + ")"
+            + ')'
         );
     }
 }

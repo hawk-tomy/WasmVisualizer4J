@@ -21,6 +21,6 @@ public class MemoryType {
     }
 
     public String toString() {
-        return "MemoryType(limit=" + this.limit + ")";
+        return String.format("MemoryType(limit=%s)", this.limit);
     }
 }

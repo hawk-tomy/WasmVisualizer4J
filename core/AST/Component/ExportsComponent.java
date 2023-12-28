@@ -35,6 +35,6 @@ public class ExportsComponent {
     }
 
     public String toString() {
-        return String.format("ExportsComponent(name='%s', type=%X, idx=%d)", this.name, this.type, this.idx);
+        return String.format("ExportsComponent(name='%s', type=0x%X, idx=%d)", this.name, this.type, this.idx);
     }
 }

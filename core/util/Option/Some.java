@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 public record Some<T>(T value) implements Option<T> {
 
     public String toString() {
-        return "util.Option.Some(" + this.value.toString() + ")";
+        return "util.Option.Some(" + this.value.toString() + ')';
     }
 
     public boolean isSome() {

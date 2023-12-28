@@ -47,7 +47,7 @@ public class BlockInstr implements ControlInstr {
                 "rt=" + this.rt
                 + "\nits=" + ToStringUtil.arrayList(this.its)
             ).indent(2)
-            + "\n}"
+            + ')'
         );
     }
 }

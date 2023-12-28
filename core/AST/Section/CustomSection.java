@@ -6,10 +6,9 @@ import core.util.ParseException;
 import core.util.Result.Err;
 import core.util.Result.Ok;
 import core.util.Result.Result;
+import core.util.ToStringUtil;
 
 import java.util.ArrayList;
-import java.util.HexFormat;
-import java.util.stream.Collectors;
 
 public final class CustomSection implements BaseSection {
     String name;
@@ -41,19 +40,13 @@ public final class CustomSection implements BaseSection {
     }
 
     public String toString() {
-        HexFormat f = HexFormat.of();
-        String s = this.custom
-            .subList(0, 10)
-            .stream()
-            .map(f::toHexDigits)
-            .collect(Collectors.joining());
         return (
             "CustomSection(\n"
             + (
                 "name='" + this.name + "'\n"
-                + "custom=" + s + "..."
+                + "custom=" + ToStringUtil.byteList(this.custom)
             ).indent(2)
-            + ")"
+            + ')'
         );
 
     }

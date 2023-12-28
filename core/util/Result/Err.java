@@ -6,7 +6,7 @@ import java.util.function.Predicate;
 public record Err<T, E extends Exception>(E value) implements Result<T, E> {
 
     public String toString() {
-        return "util.Result.Err(" + value.toString() + ")";
+        return String.format("util.Result.Err(%s)", this.value.toString());
     }
 
     public boolean isOk() {
