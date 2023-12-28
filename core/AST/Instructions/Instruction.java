@@ -31,7 +31,10 @@ public interface Instruction {
         if (UnsignedByteOp.isInRange((byte) 0x28, b, (byte) 0x41)) {
             return MemoryInstr.parse(parser, b);
         }
-        if (UnsignedByteOp.isInRange((byte) 0x41, b, (byte) 0xC0)) {
+        if (UnsignedByteOp.isInRange((byte) 0x41, b, (byte) 0x45)) {
+            return ConstInstr.parse(parser, b);
+        }
+        if (UnsignedByteOp.isInRange((byte) 0x45, b, (byte) 0xC0)) {
             return NumericInstr.parse(parser, b);
         }
         return new Err<>(new ParseException("Unknown Instruction"));
