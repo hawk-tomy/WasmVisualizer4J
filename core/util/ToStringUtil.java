@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ToStringUtil {
-    public static HexFormat f = HexFormat.of();
+    public static final HexFormat f = HexFormat.of();
 
     public static <T> String arrayList(ArrayList<T> list) {
         if (list.isEmpty()) {

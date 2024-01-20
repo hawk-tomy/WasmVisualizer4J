@@ -11,8 +11,8 @@ import core.util.ToStringUtil;
 import java.util.ArrayList;
 
 public final class CustomSection implements BaseSection {
-    String name;
-    ArrayList<Byte> custom;
+    final String name;
+    final ArrayList<Byte> custom;
 
     CustomSection(String name, ArrayList<Byte> custom) {
         this.name = name;

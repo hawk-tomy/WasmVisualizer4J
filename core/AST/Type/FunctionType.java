@@ -10,8 +10,8 @@ import core.util.ToStringUtil;
 import java.util.ArrayList;
 
 public class FunctionType {
-    ArrayList<ValueType> parameters;
-    ArrayList<ValueType> results;
+    final ArrayList<ValueType> parameters;
+    final ArrayList<ValueType> results;
 
     FunctionType(ArrayList<ValueType> parameters, ArrayList<ValueType> results) {
         this.parameters = parameters;

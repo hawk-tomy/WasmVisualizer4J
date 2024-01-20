@@ -7,8 +7,8 @@ import core.util.Result.Ok;
 import core.util.Result.Result;
 
 public class GlobalType {
-    ValueType vt;
-    boolean isMut;
+    final ValueType vt;
+    final boolean isMut;
 
     GlobalType(ValueType vt, boolean isMut) {
         this.vt = vt;

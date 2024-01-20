@@ -6,7 +6,7 @@ import core.util.Result.Result;
 import core.util.ToStringUtil;
 
 public class BranchIfInstr implements ControlInstr {
-    int uLabelIdx;
+    final int uLabelIdx;
 
     BranchIfInstr(int uLabelIdx) {
         this.uLabelIdx = uLabelIdx;

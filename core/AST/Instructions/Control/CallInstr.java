@@ -6,7 +6,7 @@ import core.util.Result.Result;
 import core.util.ToStringUtil;
 
 public class CallInstr implements ControlInstr {
-    int funcIdx;
+    final int funcIdx;
 
     CallInstr(int funcIdx) {
         this.funcIdx = funcIdx;

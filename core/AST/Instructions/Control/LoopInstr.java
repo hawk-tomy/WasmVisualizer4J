@@ -12,8 +12,8 @@ import core.util.ToStringUtil;
 import java.util.ArrayList;
 
 public class LoopInstr implements ControlInstr {
-    BlockType rt;
-    ArrayList<Instruction> its;
+    final BlockType rt;
+    final ArrayList<Instruction> its;
 
     LoopInstr(BlockType rt, ArrayList<Instruction> its) {
         this.rt = rt;

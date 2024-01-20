@@ -9,13 +9,13 @@ import core.util.ToStringUtil;
 import java.util.ArrayList;
 
 public final class GlobalSection implements BaseSection {
-    ArrayList<GlobalsComponent> global;
+    public final ArrayList<GlobalsComponent> global;
 
     GlobalSection(ArrayList<GlobalsComponent> global) {
         this.global = global;
     }
 
-    public static Result<GlobalSection, ParseException> parse(int length, Parser parser) {
+    public static Result<GlobalSection, ParseException> parse(int ignoredLength, Parser parser) {
         return parser.nextVector(GlobalsComponent::parse).map(GlobalSection::new);
     }
 

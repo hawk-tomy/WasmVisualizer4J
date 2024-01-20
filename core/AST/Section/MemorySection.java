@@ -8,13 +8,13 @@ import core.util.Result.Result;
 import java.util.ArrayList;
 
 public final class MemorySection implements BaseSection {
-    ArrayList<MemoryType> mts;
+    public final ArrayList<MemoryType> mts;
 
     MemorySection(ArrayList<MemoryType> mts) {
         this.mts = mts;
     }
 
-    public static Result<MemorySection, ParseException> parse(int length, Parser parser) {
+    public static Result<MemorySection, ParseException> parse(int ignoredLength, Parser parser) {
         return parser.nextVector(MemoryType::parse).map(MemorySection::new);
     }
 

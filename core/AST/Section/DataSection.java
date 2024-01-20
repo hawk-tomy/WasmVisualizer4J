@@ -8,13 +8,13 @@ import core.util.Result.Result;
 import java.util.ArrayList;
 
 public final class DataSection implements BaseSection {
-    ArrayList<DataComponent> data;
+    public final ArrayList<DataComponent> data;
 
     DataSection(ArrayList<DataComponent> data) {
         this.data = data;
     }
 
-    public static Result<DataSection, ParseException> parse(int length, Parser parser) {
+    public static Result<DataSection, ParseException> parse(int ignoredLength, Parser parser) {
         return parser.nextVector(DataComponent::parse).map(DataSection::new);
     }
 

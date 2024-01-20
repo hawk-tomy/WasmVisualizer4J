@@ -9,7 +9,7 @@ import core.util.ToStringUtil;
 import java.util.ArrayList;
 
 public class Expression {
-    ArrayList<Instruction> instructions;
+    final ArrayList<Instruction> instructions;
 
     Expression(ArrayList<Instruction> instructions) {
         this.instructions = instructions;

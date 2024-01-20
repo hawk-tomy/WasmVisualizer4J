@@ -7,8 +7,8 @@ import core.util.Result.Result;
 import core.util.ToStringUtil;
 
 public class VariableInstr implements Instruction {
-    int uIdx;
-    byte instr;
+    final int uIdx;
+    final byte instr;
 
     VariableInstr(int uIdx, byte instr) {
         this.uIdx = uIdx;

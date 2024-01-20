@@ -9,8 +9,8 @@ import core.util.Result.Ok;
 import core.util.Result.Result;
 
 public class GlobalsComponent {
-    private final GlobalType gt;
-    private final Expression expr;
+    public final GlobalType gt;
+    public final Expression expr;
 
     GlobalsComponent(GlobalType gt, Expression expr) {
         this.gt = gt;

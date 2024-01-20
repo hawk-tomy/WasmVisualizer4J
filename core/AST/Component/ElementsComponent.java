@@ -11,9 +11,9 @@ import core.util.ToStringUtil;
 import java.util.ArrayList;
 
 public class ElementsComponent {
-    int tableIdx;
-    Expression expr;
-    ArrayList<Integer> funcIdx;
+    final int tableIdx;
+    final Expression expr;
+    final ArrayList<Integer> funcIdx;
 
     ElementsComponent(int tableIdx, Expression expr, ArrayList<Integer> funcIdx) {
         this.tableIdx = tableIdx;

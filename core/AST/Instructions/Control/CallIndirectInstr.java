@@ -7,7 +7,7 @@ import core.util.Result.Ok;
 import core.util.Result.Result;
 
 public class CallIndirectInstr implements ControlInstr {
-    int typeIdx;
+    final int typeIdx;
 
     CallIndirectInstr(int typeIdx) {
         this.typeIdx = typeIdx;

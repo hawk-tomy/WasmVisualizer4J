@@ -8,13 +8,13 @@ import core.util.Result.Result;
 import core.util.UnsignedByteOp;
 
 public class NumericInstr implements Instruction {
-    byte instr;
+    final byte instr;
 
     NumericInstr(byte instr) {
         this.instr = instr;
     }
 
-    public static Result<Instruction, ParseException> parse(Parser parser, byte b) {
+    public static Result<Instruction, ParseException> parse(Parser ignoredParser, byte b) {
         if (UnsignedByteOp.isInRange((byte) 0x45, b, (byte) 0xC0)) {
             return new Ok<>(new NumericInstr(b));
         }
@@ -26,7 +26,7 @@ public class NumericInstr implements Instruction {
     }
 
     public String content() {
-        String sb = switch (((int) this.instr) & 0xFF) {
+        return switch (((int) this.instr) & 0xFF) {
             case 0x45 -> "i32.eqz";
             case 0x46 -> "i32.eq";
             case 0x47 -> "i32.ne";
@@ -152,6 +152,5 @@ public class NumericInstr implements Instruction {
             case 0xBF -> "f64.reinterpret_i64";
             default -> throw new Error(String.format("Unknown Instruction: 0x%X", this.instr));
         };
-        return sb;
     }
 }

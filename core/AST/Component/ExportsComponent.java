@@ -9,9 +9,9 @@ import core.util.Result.Result;
 import core.util.UnsignedByteOp;
 
 public class ExportsComponent {
-    String name;
-    byte type;
-    int idx;
+    final String name;
+    final byte type;
+    final int idx;
 
     ExportsComponent(String name, byte type, int idx) {
         this.name = name;

@@ -12,9 +12,9 @@ import core.util.ToStringUtil;
 import java.util.ArrayList;
 
 public class IfInstr implements ControlInstr {
-    BlockType rt;
-    ArrayList<Instruction> in1;
-    ArrayList<Instruction> in2;
+    final BlockType rt;
+    final ArrayList<Instruction> in1;
+    final ArrayList<Instruction> in2;
 
     IfInstr(BlockType rt, ArrayList<Instruction> in1, ArrayList<Instruction> in2) {
         this.rt = rt;

@@ -8,7 +8,7 @@ import core.util.Result.Result;
 
 public final class ImportMemoryComponent implements ImportComponentBase {
     private final String mod, name;
-    MemoryType mt;
+    final MemoryType mt;
 
     ImportMemoryComponent(String mod, String name, MemoryType mt) {
         this.mod = mod;

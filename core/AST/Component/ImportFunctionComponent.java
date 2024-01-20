@@ -9,7 +9,7 @@ import core.util.Result.Result;
 
 public final class ImportFunctionComponent implements ImportComponentBase {
     private final String mod, name;
-    int uIdx;
+    final int uIdx;
 
     ImportFunctionComponent(String mod, String name, int uIdx) {
         this.mod = mod;

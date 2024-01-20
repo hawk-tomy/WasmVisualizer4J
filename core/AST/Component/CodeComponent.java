@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class CodeComponent {
-    public Expression expr;
-    int size;
-    ArrayList<localValType> localValTypes;
+    public final Expression expr;
+    final int size;
+    final ArrayList<localValType> localValTypes;
 
     CodeComponent(int size, ArrayList<localValType> localValTypes, Expression expr) {
         this.size = size;

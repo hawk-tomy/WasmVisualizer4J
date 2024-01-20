@@ -10,8 +10,8 @@ import core.util.ToStringUtil;
 import java.util.ArrayList;
 
 public class BranchTableInstr implements ControlInstr {
-    ArrayList<Integer> uLabelIdxes;
-    int defaultLabelIdx;
+    final ArrayList<Integer> uLabelIdxes;
+    final int defaultLabelIdx;
 
     BranchTableInstr(ArrayList<Integer> uLabelIdxes, int defaultLabelIdx) {
         this.uLabelIdxes = uLabelIdxes;

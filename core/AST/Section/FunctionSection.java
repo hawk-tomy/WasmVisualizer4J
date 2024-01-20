@@ -8,13 +8,13 @@ import core.util.ToStringUtil;
 import java.util.ArrayList;
 
 public final class FunctionSection implements BaseSection {
-    ArrayList<Integer> type_indexes;
+    public final ArrayList<Integer> type_indexes;
 
     FunctionSection(ArrayList<Integer> type_indexes) {
         this.type_indexes = type_indexes;
     }
 
-    public static Result<FunctionSection, ParseException> parse(int length, Parser parser) {
+    public static Result<FunctionSection, ParseException> parse(int ignoredLength, Parser parser) {
         return parser.nextVector(Parser::nextU32).map(FunctionSection::new);
     }
 

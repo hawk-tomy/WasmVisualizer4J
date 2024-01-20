@@ -9,13 +9,13 @@ import core.util.ToStringUtil;
 import java.util.ArrayList;
 
 public final class ExportSection implements BaseSection {
-    ArrayList<ExportsComponent> exports;
+    final ArrayList<ExportsComponent> exports;
 
     ExportSection(ArrayList<ExportsComponent> exports) {
         this.exports = exports;
     }
 
-    public static Result<ExportSection, ParseException> parse(int length, Parser parser) {
+    public static Result<ExportSection, ParseException> parse(int ignoredLength, Parser parser) {
         return parser.nextVector(ExportsComponent::parse).map(ExportSection::new);
     }
 

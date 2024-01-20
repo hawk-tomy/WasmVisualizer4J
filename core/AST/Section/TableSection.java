@@ -9,13 +9,13 @@ import core.util.ToStringUtil;
 import java.util.ArrayList;
 
 public final class TableSection implements BaseSection {
-    ArrayList<TableType> tts;
+    public final ArrayList<TableType> tts;
 
     TableSection(ArrayList<TableType> tts) {
         this.tts = tts;
     }
 
-    public static Result<TableSection, ParseException> parse(int length, Parser parser) {
+    public static Result<TableSection, ParseException> parse(int ignoredLength, Parser parser) {
         return parser.nextVector(TableType::parse).map(TableSection::new);
     }
 

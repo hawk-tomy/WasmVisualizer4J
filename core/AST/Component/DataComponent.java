@@ -12,9 +12,9 @@ import core.util.ToStringUtil;
 import java.util.ArrayList;
 
 public class DataComponent {
-    int memIdx;
-    Expression expr;
-    ArrayList<Byte> bytes;
+    public final int memIdx;
+    public final Expression expr;
+    public final ArrayList<Byte> bytes;
 
     DataComponent(int memIdx, Expression expr, ArrayList<Byte> bytes) {
         this.memIdx = memIdx;

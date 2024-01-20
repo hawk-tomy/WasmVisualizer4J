@@ -9,8 +9,9 @@ import core.util.ToStringUtil;
 import core.util.UnsignedByteOp;
 
 public class MemoryInstr implements Instruction {
-    byte instr;
-    int align, offset;
+    final byte instr;
+    final int align;
+    final int offset;
 
     MemoryInstr(byte instr, int align, int offset) {
         this.instr = instr;

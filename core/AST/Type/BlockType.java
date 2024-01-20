@@ -9,7 +9,7 @@ import core.util.Result.Ok;
 import core.util.Result.Result;
 
 public class BlockType {
-    Option<ValueType> t;
+    final Option<ValueType> t;
 
     BlockType(Option<ValueType> t) {
         this.t = t;

@@ -29,18 +29,18 @@ import java.util.ArrayList;
 import java.util.function.BiFunction;
 
 public final class Module {
-    ArrayList<CustomSection> customSections;
-    ArrayList<TypeSection> types;
-    ArrayList<ImportSection> imports;
-    ArrayList<FunctionSection> functions;
-    ArrayList<TableSection> tables;
-    ArrayList<MemorySection> memories;
-    ArrayList<GlobalSection> globals;
-    ArrayList<ExportSection> exports;
-    Option<StartSection> starts;
-    ArrayList<ElementSection> elements;
-    ArrayList<CodeSection> codes;
-    ArrayList<DataSection> data;
+    final public ArrayList<CustomSection> customSections;
+    final public ArrayList<TypeSection> types;
+    final public ArrayList<ImportSection> imports;
+    final public ArrayList<FunctionSection> functions;
+    final public ArrayList<TableSection> tables;
+    final public ArrayList<MemorySection> memories;
+    final public ArrayList<GlobalSection> globals;
+    final public ArrayList<ExportSection> exports;
+    final public Option<StartSection> starts;
+    final public ArrayList<ElementSection> elements;
+    final public ArrayList<CodeSection> codes;
+    final public ArrayList<DataSection> data;
 
     Module(
         ArrayList<CustomSection> customSections,

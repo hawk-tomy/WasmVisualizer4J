@@ -9,7 +9,7 @@ import core.util.Result.Result;
 import java.util.ArrayList;
 
 public class ConstInstr implements Instruction {
-    byte instr;
+    final byte instr;
     int i32;
     long i64;
     float f32;
