@@ -67,14 +67,32 @@ public class ConstInstr implements Instruction {
         };
     }
 
-    public String toString() {
-        String s = switch (this.instr) {
+    public String getNumString() {
+        return switch (this.instr) {
             case 0x41 -> ((Integer) this.i32).toString();
             case 0x42 -> ((Long) this.i64).toString();
             case 0x43 -> ((Float) this.f32).toString();
             case 0x44 -> ((Double) this.f64).toString();
             default -> throw new Error(String.format("Unknown Instruction: 0x%X", this.instr));
         };
-        return String.format("ConstInstr(instr=0x%X, %s)", this.instr, s);
+    }
+
+    public String toString() {
+        return String.format("ConstInstr(instr=0x%X, %s)", this.instr, this.getNumString());
+    }
+
+    public String content() {
+        StringBuilder sb = new StringBuilder();
+        // e.g.: i32.const 0
+        sb.append(switch (this.instr) {
+            case 0x41 -> "i32";
+            case 0x42 -> "i64";
+            case 0x43 -> "f32";
+            case 0x44 -> "f64";
+            default -> throw new Error(String.format("Unknown Instruction: 0x%X", this.instr));
+        });
+        sb.append(".const ");
+        sb.append(this.getNumString());
+        return sb.toString();
     }
 }

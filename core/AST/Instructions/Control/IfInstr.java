@@ -64,4 +64,16 @@ public class IfInstr implements ControlInstr {
             + ')'
         );
     }
+
+    public String content() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("if ");
+        sb.append(this.rt.content());
+        ControlInstr.arrayInstructionContent(sb, this.in1);
+        if (!this.in2.isEmpty()) {
+            sb.append("\nelse");
+            ControlInstr.arrayInstructionContent(sb, this.in2);
+        }
+        return sb.toString();
+    }
 }

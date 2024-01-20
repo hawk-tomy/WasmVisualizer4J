@@ -4,6 +4,7 @@ import core.Parser;
 import core.util.ParseException;
 import core.util.Result.Err;
 import core.util.Result.Result;
+import core.util.ToStringUtil;
 
 public class VariableInstr implements Instruction {
     int uIdx;
@@ -30,5 +31,20 @@ public class VariableInstr implements Instruction {
             ).indent(2)
             + ')'
         );
+    }
+
+    public String content() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(switch (this.instr) {
+            case 0x20 -> "local.get";
+            case 0x21 -> "local.set";
+            case 0x22 -> "local.tee";
+            case 0x23 -> "global.get";
+            case 0x24 -> "global.set";
+            default -> throw new Error(String.format("Unknown Instruction: 0x%X", this.instr));
+        });
+        sb.append(" ");
+        sb.append(ToStringUtil.intoHex(this.uIdx));
+        return sb.toString();
     }
 }

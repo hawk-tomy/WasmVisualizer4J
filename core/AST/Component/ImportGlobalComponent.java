@@ -1,5 +1,6 @@
 package core.AST.Component;
 
+import core.AST.Module;
 import core.AST.Type.GlobalType;
 import core.Parser;
 import core.util.ParseException;
@@ -22,5 +23,17 @@ public final class ImportGlobalComponent implements ImportComponentBase {
     public String toString() {
         return String.format(
             "ImportGlobalComponent(mod='%s', name='%s', gt=%s)", this.mod, this.name, this.gt.toString());
+    }
+
+    public String title() {
+        return "global val: " + this.mod + "." + this.name;
+    }
+
+    public String content(Module module) {
+        return (
+            this.title()
+            + "\n"
+            + this.gt.content()
+        );
     }
 }

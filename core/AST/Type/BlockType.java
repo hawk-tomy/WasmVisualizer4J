@@ -23,4 +23,8 @@ public class BlockType {
     public String toString() {
         return "BlockType(t=" + this.t + ')';
     }
+
+    public String content() {
+        return "[" + this.t.mapOr("", vt -> vt.toString().toLowerCase()) + "]";
+    }
 }

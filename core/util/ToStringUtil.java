@@ -7,6 +7,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ToStringUtil {
+    public static HexFormat f = HexFormat.of();
+
     public static <T> String arrayList(ArrayList<T> list) {
         if (list.isEmpty()) {
             return "()";
@@ -28,14 +30,17 @@ public class ToStringUtil {
     }
 
     public static String byteList(List<Byte> bytes) {
-        HexFormat f = HexFormat.of();
         List<Byte> b = bytes;
         boolean isShrinked = false;
         if (bytes.size() > 10) {
             isShrinked = true;
             b = b.subList(0, 10);
         }
-        String s = b.stream().map(f::toHexDigits).collect(Collectors.joining());
+        String s = b.stream().map(ToStringUtil.f::toHexDigits).collect(Collectors.joining());
         return String.format("0x%s", s) + (isShrinked ? "..." : "");
+    }
+
+    public static String intoHex(int i) {
+        return "0x" + ToStringUtil.f.toHexDigits(i);
     }
 }

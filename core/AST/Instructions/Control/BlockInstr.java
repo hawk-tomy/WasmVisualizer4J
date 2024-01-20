@@ -47,4 +47,12 @@ public class BlockInstr implements ControlInstr {
             + ')'
         );
     }
+
+    public String content() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("block ");
+        sb.append(this.rt.content());
+        ControlInstr.arrayInstructionContent(sb, this.its);
+        return sb.toString();
+    }
 }

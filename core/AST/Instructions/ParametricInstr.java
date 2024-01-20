@@ -23,4 +23,8 @@ public class ParametricInstr implements Instruction {
     public String toString() {
         return "ParametricInstr(isDrop=" + this.isDrop + ')';
     }
+
+    public String content() {
+        return this.isDrop ? "drop" : "select";
+    }
 }

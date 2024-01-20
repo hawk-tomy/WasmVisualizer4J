@@ -9,11 +9,12 @@ import core.util.Result.Result;
 import core.util.ToStringUtil;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class CodeComponent {
+    public Expression expr;
     int size;
     ArrayList<localValType> localValTypes;
-    Expression expr;
 
     CodeComponent(int size, ArrayList<localValType> localValTypes, Expression expr) {
         this.size = size;
@@ -51,5 +52,11 @@ public class CodeComponent {
             ).indent(2)
             + ')'
         );
+    }
+
+    public String content() {
+        String vt = this.localValTypes.stream().map(localValType::content).collect(Collectors.joining(", "));
+        String ex = this.expr.content();
+        return vt + "\n" + ex;
     }
 }

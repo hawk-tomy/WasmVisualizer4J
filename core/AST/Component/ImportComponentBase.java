@@ -1,5 +1,6 @@
 package core.AST.Component;
 
+import core.AST.Module;
 import core.Parser;
 import core.util.InvalidIndexException;
 import core.util.ParseException;
@@ -38,4 +39,8 @@ public sealed interface ImportComponentBase
             });
         }
     }
+
+    String title();
+
+    String content(Module module);
 }

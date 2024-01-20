@@ -3,6 +3,7 @@ package core.AST.Instructions.Control;
 import core.Parser;
 import core.util.ParseException;
 import core.util.Result.Result;
+import core.util.ToStringUtil;
 
 public class CallInstr implements ControlInstr {
     int funcIdx;
@@ -17,5 +18,9 @@ public class CallInstr implements ControlInstr {
 
     public String toString() {
         return "CallInstr(funcIdx=" + this.funcIdx + ')';
+    }
+
+    public String content() {
+        return "call " + ToStringUtil.intoHex(this.funcIdx);
     }
 }

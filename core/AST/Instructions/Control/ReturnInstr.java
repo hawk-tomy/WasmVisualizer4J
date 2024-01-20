@@ -13,4 +13,8 @@ public class ReturnInstr implements ControlInstr {
     public String toString() {
         return "ReturnInstr";
     }
+
+    public String content() {
+        return "return";
+    }
 }

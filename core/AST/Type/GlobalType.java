@@ -27,4 +27,8 @@ public class GlobalType {
     public String toString() {
         return "GlobalType(vt=" + this.vt + ", isMut=" + this.isMut + ')';
     }
+
+    public String content() {
+        return (this.isMut ? "var" : "const") + " " + this.vt.toString().toLowerCase();
+    }
 }

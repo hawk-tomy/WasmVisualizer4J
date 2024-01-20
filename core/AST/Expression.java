@@ -26,4 +26,13 @@ public class Expression {
             + ')'
         );
     }
+
+    public String content() {
+        StringBuilder sb = new StringBuilder();
+        for (Instruction i : this.instructions) {
+            sb.append(i.content());
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
 }

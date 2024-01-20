@@ -3,6 +3,7 @@ package core.AST.Instructions.Control;
 import core.Parser;
 import core.util.ParseException;
 import core.util.Result.Result;
+import core.util.ToStringUtil;
 
 public class BranchInstr implements ControlInstr {
     int uLabelIdx;
@@ -17,5 +18,9 @@ public class BranchInstr implements ControlInstr {
 
     public String toString() {
         return "BranchInstr(uLabelIdx=" + this.uLabelIdx + ')';
+    }
+
+    public String content() {
+        return "br " + ToStringUtil.intoHex(this.uLabelIdx);
     }
 }

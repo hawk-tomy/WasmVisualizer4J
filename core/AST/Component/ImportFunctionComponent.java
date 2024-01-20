@@ -1,6 +1,9 @@
 package core.AST.Component;
 
+import core.AST.Module;
+import core.AST.Type.FunctionType;
 import core.Parser;
+import core.util.Option.Some;
 import core.util.ParseException;
 import core.util.Result.Result;
 
@@ -20,5 +23,21 @@ public final class ImportFunctionComponent implements ImportComponentBase {
 
     public String toString() {
         return String.format("ImportFunctionComponent(mod='%s', name='%s', idx=%d)", this.mod, this.name, this.uIdx);
+    }
+
+    public String title() {
+        return "func: " + this.mod + "." + this.name;
+    }
+
+    public String content(Module module) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.title());
+        sb.append("\n");
+        if (module.getFuncType(this.uIdx) instanceof Some<FunctionType>(FunctionType ft)) {
+            sb.append(ft.content());
+        } else {
+            sb.append("Unknown");
+        }
+        return sb.toString();
     }
 }

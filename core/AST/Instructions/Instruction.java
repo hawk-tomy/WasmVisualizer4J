@@ -10,7 +10,7 @@ import core.util.Result.Result;
 import core.util.UnsignedByteOp;
 
 public interface Instruction {
-    public static Result<Instruction, ParseException> parse(Parser parser) {
+    static Result<Instruction, ParseException> parse(Parser parser) {
         byte b;
         switch (parser.peek()) {
             case Err(InvalidIndexException e) -> {return new Err<>(e.into());}
@@ -37,4 +37,6 @@ public interface Instruction {
         }
         return new Err<>(new ParseException("Unknown Instruction"));
     }
+
+    String content();
 }

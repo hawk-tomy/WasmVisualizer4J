@@ -39,4 +39,8 @@ public class Limit {
     public String toString() {
         return String.format("Limit(uMin=%d, uMax=%d)", this.uMin, this.uMax);
     }
+
+    public String content() {
+        return this.uMin + "..." + (this.uMax == -1 ? "" : this.uMax);
+    }
 }

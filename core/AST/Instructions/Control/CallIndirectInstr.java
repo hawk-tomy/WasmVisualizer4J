@@ -25,4 +25,8 @@ public class CallIndirectInstr implements ControlInstr {
     public String toString() {
         return "CallIndirectInstr(typeIdx=" + this.typeIdx + ')';
     }
+
+    public String content() {
+        return "call_indirect 0x00";
+    }
 }

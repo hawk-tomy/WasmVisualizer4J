@@ -13,4 +13,8 @@ public class NopInstr implements ControlInstr {
     public String toString() {
         return "NopInstr";
     }
+
+    public String content() {
+        return "nop";
+    }
 }

@@ -37,4 +37,15 @@ public class BranchTableInstr implements ControlInstr {
             + ')'
         );
     }
+
+    public String content() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("br_table ");
+        for (Integer idx : this.uLabelIdxes) {
+            sb.append(ToStringUtil.intoHex(idx));
+            sb.append(" ");
+        }
+        sb.append(ToStringUtil.intoHex(this.defaultLabelIdx));
+        return sb.toString();
+    }
 }

@@ -16,4 +16,15 @@ public record localValType(int count, ValueType valType) {
         }
         return ValueType.parse(parser).map(valueType -> new localValType(count, valueType));
     }
+
+    public String content() {
+        String vt = this.valType.toString().toLowerCase();
+        StringBuilder sb = new StringBuilder();
+        sb.append(vt);
+        for (int i = 0; i < this.count - 1; i++) {
+            sb.append(", ");
+            sb.append(vt);
+        }
+        return sb.toString();
+    }
 }

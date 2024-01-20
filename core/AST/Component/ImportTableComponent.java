@@ -1,5 +1,6 @@
 package core.AST.Component;
 
+import core.AST.Module;
 import core.AST.Type.TableType;
 import core.Parser;
 import core.util.ParseException;
@@ -28,6 +29,18 @@ public final class ImportTableComponent implements ImportComponentBase {
                 + "\ntt=" + this.tt
             ).indent(2)
             + ')'
+        );
+    }
+
+    public String title() {
+        return "table: " + this.mod + "." + this.name;
+    }
+
+    public String content(Module module) {
+        return (
+            this.title()
+            + "\n"
+            + this.tt.content()
         );
     }
 }

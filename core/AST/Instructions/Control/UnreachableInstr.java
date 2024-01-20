@@ -13,4 +13,8 @@ public class UnreachableInstr implements ControlInstr {
     public String toString() {
         return "UnreachableInstr";
     }
+
+    public String content() {
+        return "unreachable";
+    }
 }

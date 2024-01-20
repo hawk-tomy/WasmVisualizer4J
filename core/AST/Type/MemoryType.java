@@ -18,4 +18,8 @@ public class MemoryType {
     public String toString() {
         return String.format("MemoryType(limit=%s)", this.limit);
     }
+
+    public String content() {
+        return "Memory\nlimit: " + this.limit.content();
+    }
 }

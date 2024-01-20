@@ -1,5 +1,6 @@
 package core.AST;
 
+import core.AST.Component.CodeComponent;
 import core.AST.Section.BaseSection;
 import core.AST.Section.CodeSection;
 import core.AST.Section.CustomSection;
@@ -13,6 +14,7 @@ import core.AST.Section.MemorySection;
 import core.AST.Section.StartSection;
 import core.AST.Section.TableSection;
 import core.AST.Section.TypeSection;
+import core.AST.Type.FunctionType;
 import core.Parser;
 import core.util.Option.None;
 import core.util.Option.Option;
@@ -187,5 +189,27 @@ public final class Module {
             ).indent(2)
             + ')'
         );
+    }
+
+    public Option<FunctionType> getFuncType(int idx) {
+        for (TypeSection ts : this.types) {
+            if (idx >= ts.types.size()) {
+                idx -= ts.types.size();
+            } else {
+                return new Some<>(ts.types.get(idx));
+            }
+        }
+        return new None<>();
+    }
+
+    public Option<CodeComponent> getCodeType(int idx) {
+        for (CodeSection cs : this.codes) {
+            if (idx >= cs.code.size()) {
+                idx -= cs.code.size();
+            } else {
+                return new Some<>(cs.code.get(idx));
+            }
+        }
+        return new None<>();
     }
 }

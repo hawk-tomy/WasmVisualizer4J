@@ -6,6 +6,8 @@ import core.util.ParseException;
 import core.util.Result.Err;
 import core.util.Result.Result;
 
+import java.util.ArrayList;
+
 public interface ControlInstr extends Instruction {
     static Result<ControlInstr, ParseException> parse(Parser parser, byte b) {
         return switch (b) {
@@ -22,5 +24,14 @@ public interface ControlInstr extends Instruction {
             case 0x11 -> CallIndirectInstr.parse(parser);
             default -> new Err<>(new ParseException("Not Found."));
         };
+    }
+
+    static void arrayInstructionContent(StringBuilder sb, ArrayList<Instruction> its) {
+        for (Instruction it : its) {
+            for (String s : it.content().lines().toList()) { // split by new lines.
+                sb.append("\n  ");
+                sb.append(s);
+            }
+        }
     }
 }

@@ -47,4 +47,14 @@ public class FunctionType {
             + ')'
         );
     }
+
+    public String content() {
+        return (
+            "("
+            + String.join(", ", this.parameters.stream().map(vt -> vt.toString().toLowerCase()).toList())
+            + ") → ("
+            + String.join(", ", this.results.stream().map(vt -> vt.toString().toLowerCase()).toList())
+            + ")"
+        );
+    }
 }
