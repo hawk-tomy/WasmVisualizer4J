@@ -4,6 +4,7 @@ import core.util.Option.None;
 import core.util.Option.Option;
 import core.util.Option.Some;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -95,5 +96,9 @@ public record Ok<T, E extends Exception>(T value) implements Result<T, E> {
 
     public T unwrapOrElse(Function<E, T> f) {
         return this.value;
+    }
+
+    public void mapConsume(Consumer<T> ok, Consumer<E> err) {
+        ok.accept(this.value);
     }
 }

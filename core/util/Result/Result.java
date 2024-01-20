@@ -2,6 +2,7 @@ package core.util.Result;
 
 import core.util.Option.Option;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -54,4 +55,6 @@ public sealed interface Result<T, E extends Exception> permits Ok, Err {
     T unwrapOr(T default_);
 
     T unwrapOrElse(Function<E, T> f);
+
+    void mapConsume(Consumer<T> ok, Consumer<E> err);
 }
