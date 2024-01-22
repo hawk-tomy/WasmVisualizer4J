@@ -41,6 +41,6 @@ public class ToStringUtil {
     }
 
     public static String intoHex(int i) {
-        return "0x" + ToStringUtil.f.toHexDigits(i);
+        return String.format("0x%X",i);
     }
 }
