@@ -57,6 +57,6 @@ public class CodeComponent {
     public String content() {
         String vt = this.localValTypes.stream().map(localValType::content).collect(Collectors.joining(", "));
         String ex = this.expr.content();
-        return vt + "\n" + ex;
+        return "locals: " + vt + "\n\nexpr\n" + ex;
     }
 }
